@@ -55,7 +55,7 @@ set member_options [util_memoize "im_employee_options" 3600]
 set cost_center_options [im_cost_center_options -include_empty 1]
 set view_options {{"Milestone List" milestone_list}}
 set current_interval_options {{Today 1} {"Next 7 days" 7} {"Next 30 days" 30} {"Next 365 days" 365}}
-set customer_options [im_company_options -type "Customers"]
+set customer_options [im_company_options -type "Customers" -with_active_projects_p 1]
 
 set form_id "milestone_filter"
 set object_type "im_project"
@@ -72,7 +72,7 @@ ad_form \
 	{current_interval:text(select),optional {label "[lang::message::lookup {} intranet-milestone.Time_Interval {Time Interval}]"} {options $current_interval_options} }
 	{status_id:text(im_category_tree),optional {label "[lang::message::lookup {} intranet-milestone.Milestone_Status {Status}]"} {custom {category_type "Intranet Project Status" translate_p 1 package_key intranet-core}} }
 	{type_id:text(im_category_tree),optional {label "[lang::message::lookup {} intranet-milestone.Milestone_Type {Type}]"} {custom {category_type "Intranet Project Type" translate_p 1 package_key intranet-core} } }
-    	{customer_id:text(hidden),optional {label "[lang::message::lookup {} intranet-milestone.Customer {Customer}]"} {options $customer_options }}
+    	{customer_id:text(select),optional {label "[lang::message::lookup {} intranet-milestone.Customer {Customer}]"} {options $customer_options }}
     	{member_id:text(select),optional {label "[lang::message::lookup {} intranet-milestone.Member {Member}]"} {options $member_options }}
     	{project_lead_id:text(hidden),optional {label "[lang::message::lookup {} intranet-milestone.Project_Manager {Project Manager}]"} {options $member_options }}
     }
