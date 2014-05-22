@@ -51,7 +51,7 @@ if {"" != $admin_links} { set admin_links "<ul>\n$admin_links\n</ul>\n" }
 # Filter with Dynamic Fields
 # ---------------------------------------------------------------
 
-set member_options [util_memoize "im_employee_options" 3600]
+set member_options [util_memoize [list im_employee_options] 3600]
 set cost_center_options [im_cost_center_options -include_empty 1]
 set view_options {{"Milestone List" milestone_list}}
 set current_interval_options {{Today 1} {"Next 7 days" 7} {"Next 30 days" 30} {"Next 365 days" 365}}
