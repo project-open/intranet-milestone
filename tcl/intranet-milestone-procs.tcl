@@ -24,7 +24,7 @@ ad_library {
 ad_proc -public im_package_milestone_id {} {
     Returns the package id of the intranet-milestone module
 } {
-    return [util_memoize "im_package_milestone_id_helper"]
+    return [util_memoize im_package_milestone_id_helper]
 }
 
 ad_proc -private im_package_milestone_id_helper {} {
