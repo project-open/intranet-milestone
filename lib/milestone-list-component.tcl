@@ -108,7 +108,7 @@ set sql "
 		to_char(p.end_date, :date_format) as end_date_formatted
 	from	($milestone_sql) p
 	where	1=1
-	order by p.end_date DESC
+	order by p.end_date ASC
 "
 
 set cnt 0

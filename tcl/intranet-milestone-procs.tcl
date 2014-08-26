@@ -58,7 +58,7 @@ ad_proc -public im_milestone_list_component {
 		    [list customer_id $customer_id] \
 		    [list member_id $member_id] \
     ]
-    set result [ad_parse_template -params $params "/packages/intranet-milestone/www/milestone-list-component"]
+    set result [ad_parse_template -params $params "/packages/intranet-milestone/lib/milestone-list-component"]
     return [string trim $result]
 }
 
