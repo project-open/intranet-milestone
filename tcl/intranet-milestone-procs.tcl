@@ -85,7 +85,7 @@ ad_proc -public im_milestone_select_sql {
 	- im_projects.*, (all fields from the Projects table)
 	- milestone_status, milestone_type, (status and type human readable)
 } {
-    set current_user_id [ad_get_user_id]
+    set current_user_id [ad_conn user_id]
     array set var_hash $var_list
     foreach var_name [array names var_hash] { set $var_name $var_hash($var_name) }
 
@@ -110,7 +110,7 @@ ad_proc -public im_milestone_select_sql {
 		select	p.project_id
 		from	im_projects p,
 			acs_rels r
-		where	r.object_id_two = [ad_get_user_id] and
+		where	r.object_id_two = [ad_conn user_id] and
 			r.object_id_one = p.project_id
 	UNION
 		-- User belongs to a company which is the customer of project that belongs to milestome
@@ -119,7 +119,7 @@ ad_proc -public im_milestone_select_sql {
 			im_projects p,
 			acs_rels r1,
 			acs_rels r2
-		where	r1.object_id_two = [ad_get_user_id] and
+		where	r1.object_id_two = [ad_conn user_id] and
 			r1.object_id_one = c.company_id and
 			p.company_id = c.company_id
 	)
