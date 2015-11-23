@@ -23,7 +23,7 @@
 # Defaults & Security
 # ---------------------------------------------------------------
 
-set current_user_id [ad_maybe_redirect_for_registration]
+set current_user_id [auth::require_login]
 set return_url [im_url_with_query]
 set date_format "YYYY-MM-DD"
 
