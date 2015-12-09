@@ -635,7 +635,7 @@ db_foreach sql $report_sql {
 
 	# Calculated Variables (New!)
 	set po_per_quote_perc "undef"
-	if {[expr {$quote_subtotal+0}] != 0} {
+	if {[expr $quote_subtotal+0] != 0} {
 	  set po_per_quote_perc [expr {int(10000.0 * $po_subtotal / $quote_subtotal) / 100.0}]
 	  set po_per_quote_perc "$po_per_quote_perc %"
 	}
