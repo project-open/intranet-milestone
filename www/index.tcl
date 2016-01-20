@@ -156,7 +156,7 @@ set left_navbar_html "
 
       <div class='filter-block'>
          <div class='filter-title'>
-	        #intranet-core.Admin_Links#
+	        [_ intranet-core.Admin_Links]
          </div>
          $admin_links
       </div>
