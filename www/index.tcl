@@ -145,6 +145,7 @@ eval [template::adp_compile -string {<formtemplate id="milestone_filter"></formt
 set filter_html $__adp_output
 
 
+# fraber 160817: Filtering doesn't make sense with milestones...
 set left_navbar_html "
       <div class='filter-block'>
          <div class='filter-title'>
@@ -153,7 +154,9 @@ set left_navbar_html "
          $filter_html
       </div>
       <hr/>
+"
 
+set left_navbar_html "
       <div class='filter-block'>
          <div class='filter-title'>
 	        [_ intranet-core.Admin_Links]
