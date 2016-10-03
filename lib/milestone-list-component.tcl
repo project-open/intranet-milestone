@@ -32,7 +32,7 @@ set date_format "YYYY-MM-DD"
 # ---------------------------------------------------------------
 
 set export_var_list [list]
-set list_id "milestones_list"
+set list_id "milestones_list_[string map {"." ""} [expr rand()]]"
 set bulk_actions_list [list]
 if {[im_permission $current_user_id "edit_projects_all"]} {
     lappend bulk_actions_list "Close" 
