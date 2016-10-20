@@ -166,3 +166,14 @@ set left_navbar_html "
 "
 
 
+
+# ---------------------------------------------------------------
+# Sub-Navbar
+# ---------------------------------------------------------------
+
+set letter ""
+set menu_select_label "milestones"
+set next_page_url ""
+set previous_page_url ""
+set sub_navbar_html [im_project_navbar -navbar_menu_label "projects" $letter "/intranet/projects/index" $next_page_url $previous_page_url [list start_idx order_by how_many letter ticket_status_id] $menu_select_label]
+
