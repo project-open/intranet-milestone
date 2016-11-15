@@ -13,6 +13,7 @@
         <owner url="mailto:frank.bergmann@project-open.com">Frank Bergmann</owner>
         <summary>Defines project milestones</summary>
         <vendor url="http://www.project-open.com/">]project--open[</vendor>
+        <release-date>2016-11-15</release-date>
         <description format="text/plain">Adds a milestone_p field to im_projects to identify milestones. The status of these milestones is shown in the Milestone page.</description>
 
 	<provides url="intranet-milestone" version="3.4.0.2.0"/>
