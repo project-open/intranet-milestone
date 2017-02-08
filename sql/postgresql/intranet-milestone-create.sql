@@ -51,7 +51,7 @@ SELECT im_component_plugin__new (
 	'Late Milestones',		-- plugin_name
 	'intranet-milestone',		-- package_name
 	'right',			-- location
-	'/intranet/index',		-- page_url
+	'/intranet/projects/dashboard',		-- page_url
 	null,				-- view_name
 	95,				-- sort_order
 	'im_milestone_list_component -end_date_before 0 -status_id 76',	-- component_tcl
@@ -75,7 +75,7 @@ SELECT im_component_plugin__new (
 	'Current Milestones',		-- plugin_name
 	'intranet-milestone',		-- package_name
 	'right',			-- location
-	'/intranet/index',		-- page_url
+	'/intranet/projects/dashboard',		-- page_url
 	null,				-- view_name
 	96,				-- sort_order
 	'im_milestone_list_component -end_date_after 0 -end_date_before 7 -status_id 76',	-- component_tcl
