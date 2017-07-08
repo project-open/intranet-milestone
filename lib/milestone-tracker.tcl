@@ -24,7 +24,7 @@ set main_project_id $project_id
 set diagram_rand [expr round(rand() * 100000000.0)]
 set diagram_id "milestone_tracker_$diagram_rand"
 set show_diagram_p 1
-set show_debug_p 1
+set show_debug_p 0
 
 set audit_dates_max_entries 15
 
