@@ -60,7 +60,6 @@ if {1 || [llength $milestone_list] < 3} {
 
 if {"" eq $milestone_list} { set milestone_list {0} }
 if {[llength $milestone_list] < 3} { set show_diagram_p 0 }
-
 foreach mid $milestone_list { set milestone_name_hash($mid) [acs_object_name $mid] }
 
 
