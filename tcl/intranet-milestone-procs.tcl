@@ -63,6 +63,49 @@ ad_proc -public im_milestone_list_component {
 }
 
 
+
+ad_proc -public im_milestone_tracker {
+    -project_id:required
+    {-diagram_width 300 }
+    {-diagram_height 300 }
+    {-diagram_caption "" }
+    {-diagram_title "Milestones" }
+} {
+    Returns a HTML code with a Sencha line diagram representing
+    the evolution of the project's milestones (sub-projects marked
+    as milestones or with a type that is a sub-type of milestone).
+    @param project_id The project to show
+} {
+    # Check if audit has been installed
+    if {![im_table_exists im_audits]} { return "" }
+
+    # Check if the project is a main project and abort otherwise
+    # We only want to show this diagram in a main project.
+    set parent_id [db_string parent "select parent_id from im_projects where project_id = :project_id" -default ""]
+    if {"" != $parent_id} { return "" }
+
+    # Discard any projects without children
+    set child_count [db_string child_count "select count(*) from im_projects where parent_id = :project_id" -default ""]
+    if {0 == $child_count} { return "" }
+
+    # Sencha check and permissions
+    if {![im_sencha_extjs_installed_p]} { return "" }
+    im_sencha_extjs_load_libraries
+
+    # Call the lib portlet
+    set params [list \
+		    [list project_id $project_id] \
+		    [list diagram_width $diagram_width] \
+		    [list diagram_height $diagram_height] \
+		    [list diagram_title $diagram_title] \
+		    [list diagram_caption $diagram_caption] \
+    ]
+    set result [ad_parse_template -params $params "/packages/intranet-milestone/lib/milestone-tracker"]
+    return [string trim $result]
+}
+
+
+
 # ----------------------------------------------------------------------
 # Generate generic select SQL for milestones
 # to be used in list pages, options, ...
