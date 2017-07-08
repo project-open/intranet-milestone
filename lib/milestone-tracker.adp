@@ -69,22 +69,8 @@ Ext.onReady(function () {
 </script>
 
 
-
-<p>audit_count=
-<%= [db_string audits "
-	select	count(*)
-	from	im_audits a,
-		im_projects p,
-		im_projects main_p
-	where	main_p.project_id = :main_project_id and
-		p.tree_sortkey between main_p.tree_sortkey and tree_right(main_p.tree_sortkey) and
-		p.project_id = a.audit_object_id
-"] %></p>
-
-@debug_html;noquote@ 
-
--->
-
-
+<if "1" eq @show_debug_p@>
+@debug_html;noquote@
+</if>
 </if>
 
