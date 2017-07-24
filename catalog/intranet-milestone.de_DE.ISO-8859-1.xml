@@ -13,6 +13,7 @@
   <msg key="Milestone_Status">Status</msg>
   <msg key="Milestone_Type">Typ Meilenstein</msg>
   <msg key="Milestones">Meilensteine</msg>
+  <msg key="Milestones_List">Meilensteine Liste</msg>
   <msg key="On_track_status">OK?</msg>
   <msg key="Project_Manager">Projektmanager</msg>
   <msg key="Time_Interval">Zeitintervall</msg>
