@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<message_catalog package_key="intranet-milestone" locale="pl_PL" charset="utf-8">
+
+  <msg key="Add_a_new_Milestone">Nowy Kamień Milowy</msg>
+  <msg key="Current_Milestones">Bieżące Kamienie Milowe</msg>
+  <msg key="Customer">Klient</msg>
+  <msg key="Deadline">Ostateczny Termin</msg>
+  <msg key="Filter_Milestones">Filtr Kamieni Milowych</msg>
+  <msg key="Future_Milestones">Przyszłe Kamienie Milowe</msg>
+  <msg key="Late_Milestones">Ostatnie Kamienie Milowe</msg>
+  <msg key="Member">Członek</msg>
+  <msg key="Milestone_Name">Nazwa</msg>
+  <msg key="Milestone_Status">Status</msg>
+  <msg key="Milestone_Type">Typ</msg>
+  <msg key="Milestones">Kamieni Milowych</msg>
+  <msg key="On_track_status">OK?</msg>
+  <msg key="Project_Manager">Kierownik Projektu</msg>
+  <msg key="Time_Interval">Przedział Czasu</msg>
+</message_catalog>
