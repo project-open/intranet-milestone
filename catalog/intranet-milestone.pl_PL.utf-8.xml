@@ -7,12 +7,13 @@
   <msg key="Deadline">Ostateczny Termin</msg>
   <msg key="Filter_Milestones">Filtr Kamieni Milowych</msg>
   <msg key="Future_Milestones">Przyszłe Kamienie Milowe</msg>
-  <msg key="Late_Milestones">Ostatnie Kamienie Milowe</msg>
+  <msg key="Late_Milestones">Opóźnione kamienie milowe</msg>
   <msg key="Member">Członek</msg>
   <msg key="Milestone_Name">Nazwa</msg>
   <msg key="Milestone_Status">Status</msg>
   <msg key="Milestone_Type">Typ</msg>
   <msg key="Milestones">Kamieni Milowych</msg>
+  <msg key="Milestones_List">Lista kamieni milowych</msg>
   <msg key="On_track_status">OK?</msg>
   <msg key="Project_Manager">Kierownik Projektu</msg>
   <msg key="Time_Interval">Przedział Czasu</msg>
