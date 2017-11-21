@@ -158,6 +158,7 @@ set cell_sql "
 		a.audit_date
 "
 db_foreach cells $cell_sql {
+    if {"" eq $start_date || "" eq $end_date} { continue }
     set key "$audit_object_id-$audit_date"
     set cell_hash($key) [string range $end_date 0 9]
 
@@ -168,6 +169,7 @@ db_foreach cells $cell_sql {
     # Find max(end_date) of the milestone
     if {$end_date > $milestone_end_date_hash($audit_object_id)} { set milestone_end_date_hash($audit_object_id) $end_date }
 }
+
 
 
 # Extrapolate the cell values for audit_dates that don't have data
@@ -219,11 +221,52 @@ set tracker_duration_days [expr $tracker_end_julian - $tracker_start_julian]
 set tracker_duration_months [expr $tracker_duration_days / 30.0]
 set tracker_step_months [expr 1 + int($tracker_duration_months / 10.0)]
 
+# Determine step-width for the Y range:
+set tracker_days [expr $tracker_end_julian - $tracker_start_julian]
+set tracker_step_uom "Ext.Date.MONTH"
+set tracker_step_units 1
+if {$tracker_days > 3650} {
+    # more than 10 years
+    set tracker_step_uom "Ext.Date.YEAR"
+    set tracker_step_units 1
+}
+if {$tracker_days < 365} {
+    set tracker_step_uom "Ext.Date.DAY"
+    set tracker_step_units 7
+}
+if {$tracker_days < 33} {
+    set tracker_step_uom "Ext.Date.DAY"
+    set tracker_step_units 1
+}
+
+
+
+# Y-Range
 set yrange_start_julian [dt_ansi_to_julian_single_arg $yrange_start_date]
 set yrange_end_julian [dt_ansi_to_julian_single_arg $yrange_end_date]
 set yrange_duration_days [expr $yrange_end_julian - $yrange_start_julian]
 set yrange_duration_months [expr $yrange_duration_days / 30.0]
 set yrange_step_months [expr 1 + int($yrange_duration_months / 10.0)]
+
+# Determine step-width for the Y range:
+set yrange_days [expr $yrange_end_julian - $yrange_start_julian]
+set yrange_step_uom "Ext.Date.MONTH"
+set yrange_step_units 1
+if {$yrange_days > 3650} {
+    # more than 10 years
+    set yrange_step_uom "Ext.Date.YEAR"
+    set yrange_step_units 1
+}
+if {$yrange_days < 365} {
+    set yrange_step_uom "Ext.Date.DAY"
+    set yrange_step_units 7
+}
+if {$yrange_days < 33} {
+    set yrange_step_uom "Ext.Date.DAY"
+    set yrange_step_units 1
+}
+
+
 
 # ad_return_complaint 1 $yrange_duration_months
 
