@@ -231,8 +231,8 @@ if {$tracker_days > 3650} {
     set tracker_step_units 1
 }
 if {$tracker_days < 365} {
-    set tracker_step_uom "Ext.Date.DAY"
-    set tracker_step_units 7
+    set tracker_step_uom "Ext.Date.MONTH"
+    set tracker_step_units 1
 }
 if {$tracker_days < 33} {
     set tracker_step_uom "Ext.Date.DAY"
@@ -258,8 +258,8 @@ if {$yrange_days > 3650} {
     set yrange_step_units 1
 }
 if {$yrange_days < 365} {
-    set yrange_step_uom "Ext.Date.DAY"
-    set yrange_step_units 7
+    set yrange_step_uom "Ext.Date.MONTH"
+    set yrange_step_units 1
 }
 if {$yrange_days < 33} {
     set yrange_step_uom "Ext.Date.DAY"
