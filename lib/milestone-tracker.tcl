@@ -204,14 +204,14 @@ foreach oid $milestone_list {
 
 
 regexp {^(....)\-(..)\-(..)$} $tracker_start_date match year month day
-set tracker_start_date_js "new Date($year, $month, $day)"
+set tracker_start_date_js "new Date($year, $month-1, $day)"
 regexp {^(....)\-(..)\-(..)$} $tracker_end_date match year month day
-set tracker_end_date_js "new Date($year, $month, $day)"
+set tracker_end_date_js "new Date($year, $month-1, $day)"
 
 regexp {^(....)\-(..)\-(..)$} $yrange_start_date match year month day
-set yrange_start_date_js "new Date($year, $month, $day)"
+set yrange_start_date_js "new Date($year, $month-1, $day)"
 regexp {^(....)\-(..)\-(..)$} $yrange_end_date match year month day
-set yrange_end_date_js "new Date($year, $month, $day)"
+set yrange_end_date_js "new Date($year, $month-1, $day)"
 
 
 
