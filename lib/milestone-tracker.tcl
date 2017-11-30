@@ -204,14 +204,14 @@ foreach oid $milestone_list {
 
 
 regexp {^(....)\-(..)\-(..)$} $tracker_start_date match year month day
-set tracker_start_date_js "new Date($year, $month-1, $day)"
+set tracker_start_date_js "new Date('$year-$month-$day')"
 regexp {^(....)\-(..)\-(..)$} $tracker_end_date match year month day
-set tracker_end_date_js "new Date($year, $month-1, $day)"
+set tracker_end_date_js "new Date('$year-$month-$day')"
 
 regexp {^(....)\-(..)\-(..)$} $yrange_start_date match year month day
-set yrange_start_date_js "new Date($year, $month-1, $day)"
+set yrange_start_date_js "new Date('$year-$month-$day')"
 regexp {^(....)\-(..)\-(..)$} $yrange_end_date match year month day
-set yrange_end_date_js "new Date($year, $month-1, $day)"
+set yrange_end_date_js "new Date('$year-$month-$day')"
 
 
 
@@ -293,7 +293,7 @@ foreach audit_date $audit_dates {
 
     # Reformat date for javascript
     regexp {^(....)\-(..)\-(..)$} $audit_date match year month day
-    set data_line "{date: new Date($year, $month-1, $day)"
+    set data_line "{date: new Date('$year-$month-$day')"
 
     # Loop through the columns
     set row "<td><nobr>$audit_date</nobr></td>"
@@ -302,7 +302,7 @@ foreach audit_date $audit_dates {
 	set v ""
 	if {[info exists cell_hash($key)]} { set v $cell_hash($key) }
 	regexp {^(....)\-(..)\-(..)$} $v match year month day
-	set v_js "new Date($year, $month-1, $day)"
+	set v_js "new Date('$year-$month-$day')"
 
 	# Skip values of milestones after they have been closed
 	# Exception: The very first entry in order to show something in case of demo data etc.
