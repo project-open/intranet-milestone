@@ -44,6 +44,7 @@ ad_proc -public im_milestone_list_component {
     {-end_date_after "" }
     {-type_id ""}
     {-status_id ""}
+    {-project_id ""}
     {-customer_id ""}
     {-member_id ""}
 } {
@@ -55,6 +56,7 @@ ad_proc -public im_milestone_list_component {
 		    [list end_date_after $end_date_after] \
 		    [list type_id $type_id] \
 		    [list status_id $status_id] \
+		    [list project_id $project_id] \
 		    [list customer_id $customer_id] \
 		    [list member_id $member_id] \
     ]
@@ -117,9 +119,11 @@ ad_proc -public im_milestone_select_sql {
     {-end_date_after "" }
     {-status_id ""} 
     {-customer_id ""}
+    {-project_id ""}
     {-member_id ""} 
     {-cost_center_id ""} 
     {-var_list "" }
+
 } {
     Returns an SQL statement that allows you to select a range of
     milestones, given a number of conditions.
@@ -175,6 +179,14 @@ ad_proc -public im_milestone_select_sql {
 
     if {"" != $status_id} { lappend extra_wheres "p.project_status_id in ([join [im_sub_categories $status_id] ","])" }
     if {"" != $type_id} { lappend extra_wheres "p.project_type_id in ([join [im_sub_categories $type_id] ","])" }
+    if {"" != $customer_id} { lappend extra_wheres "p.company_id = :customer_id" }
+    if {"" != $project_id} { lappend extra_wheres "p.project_id in (
+	select	sub_p.project_id
+	from	im_projects sub_p,
+		im_projects main_p
+	where	main_p.project_id = :project_id and
+		sub_p.tree_sortkey between main_p.tree_sortkey and tree_right(main_p.tree_sortkey)
+    )" }
     if {"" != $perm_where} { lappend extra_wheres $perm_where }
 
     if {"" != $end_date_after} { lappend extra_wheres "p.end_date >= now()+'$end_date_after days'" }
@@ -187,18 +199,22 @@ ad_proc -public im_milestone_select_sql {
     if {"" != $extra_where} { set extra_where "and $extra_where" }
 
     set select_sql "
-	select distinct
+	select
 		p.*,
-		im_category_from_id(project_status_id) as project_status,
-		im_category_from_id(project_type_id) as project_type
+		im_category_from_id(p.project_status_id) as project_status,
+		im_category_from_id(p.project_type_id) as project_type
 	from
-		im_projects p
+		im_projects p,
+		im_projects main_p
 		$extra_from
 	where
+		main_p.tree_sortkey = tree_root_key(p.tree_sortkey) and
 		(	p.milestone_p = 't' OR 
 			p.project_type_id in ([join [im_sub_categories [im_project_type_milestone]] ","])
 		)
 		$extra_where
+	order by
+		main_p.project_name
     "
 
     return $select_sql
