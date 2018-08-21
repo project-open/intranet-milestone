@@ -12,6 +12,7 @@
   <msg key="Milestone_Status">Stato</msg>
   <msg key="Milestone_Type">Tipo</msg>
   <msg key="Milestones">Milestone</msg>
+  <msg key="Milestones_List">Lista Milestone</msg>
   <msg key="On_track_status">OK?</msg>
   <msg key="Time_Interval">Intervallo di tempo</msg>
 </message_catalog>
