@@ -1,0 +1,392 @@
+	<!DOCTYPE html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!--[if lt IE 7.]>
+<script defer type='text/javascript' src='/intranet/js/pngfix.js'></script>
+<![endif]-->
+<meta name='generator' lang='en' content='OpenACS version 5.9.0'>
+<link rel='stylesheet' href='/resources/acs-developer-support/acs-developer-support.css'  type='text/css' media='all'>
+<link rel='stylesheet' href='/resources/acs-templating/forms.css'  type='text/css' media='screen'>
+<link rel='stylesheet' href='/resources/acs-templating/lists.css'  type='text/css' media='screen'>
+<link rel='stylesheet' href='/resources/acs-subsite/default-master.css'  type='text/css' media='all'>
+<link rel='stylesheet' href='/sencha-extjs-v421/resources/css/ext-all-gray.css'  type='text/css' media='screen'>
+<link rel='stylesheet' href='/intranet/style/print.css'  type='text/css' media='print'>
+<link rel='stylesheet' href='/resources/acs-templating/mktree.css'  type='text/css' media='screen'>
+<link rel='stylesheet' href='/intranet/style/smartmenus/sm-core-css.css'  type='text/css' media='screen'>
+<link rel='stylesheet' href='/intranet/style/smartmenus/sm-simple/sm-simple.css'  type='text/css' media='screen'>
+<link rel='stylesheet' href='/intranet/style/style.saltnpepper.css?v=0'  type='text/css' media='screen'>
+<link rel='stylesheet' href='/calendar/resources/calendar.css'  type='text/css' media='screen'>
+<script type='text/javascript' src='/intranet/js/jquery.min.js'></script>
+<script type='text/javascript' src='/sencha-extjs-v421/ext-all.js'></script>
+<script type='text/javascript' src='/resources/acs-templating/mktree.js'></script>
+<script type='text/javascript' src='/intranet/js/rounded_corners.inc.js'></script>
+<script type='text/javascript' src='/intranet/js/showhide.js'></script>
+<script type='text/javascript' src='/resources/acs-subsite/core.js'></script>
+<script type='text/javascript' src='/intranet/js/smartmenus/jquery.smartmenus.min.js'></script>
+<script type='text/javascript' src='/intranet/js/style.saltnpepper.js'></script>
+
+		<title>2016_0005 - Motor Development (2016-06-01)</title>
+		</head>
+		
+		
+  <table width="100%" id="developer-toolbar">
+    <tr align="center">
+      <td>
+        <a href="/ds/" title="192.168.0.38:8000">Developer&nbsp;Support</a>
+      </td>
+
+      <td class="actions">
+        <ul>
+          
+            <li><a href="/ds/set?field=user&amp;return_url=%2fintranet%2fprojects%2fview%3fproject_id%3d37450%26view_name%3dcomponent%26plugin_id%3d49789&amp;enabled_p=1" class="off" title="Toggle user switching">USR</a></li>
+          
+            <li><a href="/ds/set?field=db&amp;return_url=%2fintranet%2fprojects%2fview%3fproject_id%3d37450%26view_name%3dcomponent%26plugin_id%3d49789&amp;enabled_p=1" class="off" title="Toggle DB data collection">DB</a></li>
+          
+            <li><a href="/ds/set?field=prof&amp;return_url=%2fintranet%2fprojects%2fview%3fproject_id%3d37450%26view_name%3dcomponent%26plugin_id%3d49789&amp;enabled_p=1" class="off" title="Toggle template profiling">PRO</a></li>
+          
+            <li><a href="/ds/set?field=frag&amp;return_url=%2fintranet%2fprojects%2fview%3fproject_id%3d37450%26view_name%3dcomponent%26plugin_id%3d49789&amp;enabled_p=1" class="off" title="Toggle caching page fragments">FRG</a></li>
+          
+            <li><a href="/acs-lang/admin/translator-mode-toggle?return_url=%2fintranet%2fprojects%2fview%3fproject_id%3d37450%26view_name%3dcomponent%26plugin_id%3d49789" class="off" title="Toggle translation mode">TRN</a></li>
+          
+            <li><a href="javascript:void(d=document);void(el=d.getElementsByTagName(&#39;span&#39;));for(i=0;i&lt;el.length;i++){if(el[i].className==&#39;developer-support-adp-file-on&#39;){void(el[i].className=&#39;developer-support-adp-file-off&#39;)}else{if(el[i].className==&#39;developer-support-adp-file-off&#39;){void(el[i].className=&#39;developer-support-adp-file-on&#39;)}}};void(el=d.getElementsByTagName(&#39;div&#39;));for(i=0;i&lt;el.length;i++){if(el[i].className==&#39;developer-support-adp-box-on&#39;){void(el[i].className=&#39;developer-support-adp-box-off&#39;)}else{if(el[i].className==&#39;developer-support-adp-box-off&#39;){void(el[i].className=&#39;developer-support-adp-box-on&#39;)}};if(el[i].className==&#39;developer-support-adp-output-on&#39;){void(el[i].className=&#39;developer-support-adp-output-off&#39;)}else{if(el[i].className==&#39;developer-support-adp-output-off&#39;){void(el[i].className=&#39;developer-support-adp-output-on&#39;)}};}" class="off" title="Toggle ADP reveal">ADP</a></li>
+          
+            <li><a href="javascript:void(d=document);void(el=d.getElementsByTagName(&#39;div&#39;));for(i=0;i&lt;el.length;i++){if(el[i].className==&#39;developer-support-footer&#39;){void(el[i].className=&#39;developer-support-footer-off&#39;)}else{if(el[i].className==&#39;developer-support-footer-off&#39;){void(el[i].className=&#39;developer-support-footer&#39;)}}};" class="off" title="Toggle Footer display">FOT</a></li>
+          
+        </ul>
+      </td>
+
+      <td align="center" class="actions">
+        <ul>
+          <li><a href="/ds/request-info?request=125" title="View request information">127 ms</a>
+          <span>|</span></li>
+          <li><a href="/ds/shell" title="Execute commands and see the result">Shell</a>
+          <span>|</span></li>
+          <li><a href="/acs-admin/apm/" title="Modify/reload packages">APM</a>
+          <span>|</span></li>
+          <li><a href="/admin/site-map/?root_id=513" title="Configure current package via Site Map">Site&nbsp;Map</a>
+          <span>|</span></li>
+          <li><a href="/acs-admin/apm/?reload_links_p=1" title="Scan for changed library files">Changed</a>
+          <span>|</span></li>
+          <li><a href="/acs-admin/cache/flush-cache?suffix=util_memoize&amp;return_url=%2fintranet%2fprojects%2fview%3fproject_id%3d37450%26view_name%3dcomponent%26plugin_id%3d49789" title="Flush entire util_memoize cache">Flush</a>
+          <span>|</span></li>
+          <li><a href="" title="Automated Testing Home">Test</a>
+          <span>|</span></li>
+          <li><a href="/acs-admin/users/" title="Add/edit/become users">Users</a>
+          <span>|</span></li>
+          <li><a href="/acs-lang/admin/" title="Add/edit message keys">I18n</a>
+          <span>|</span></li>
+          <li><a href="/doc/" title="View system documentation">Docs</a>
+          <span>|</span></li>
+          <li><a href="/api-doc/" title="View/search OpenACS Tcl API documentation">API&nbsp;doc</a></li>
+          <span>|</span>
+           <li><a href="/xotcl/" title="XoTcl Documentation Browser">XoTcl</a></li>
+          
+           </li>
+          
+        </ul>
+      </td>
+
+      <td align="right" id="developer-search">
+        <form action="/api-doc/proc-search">
+	  <div><input type="hidden" name="search_type" value="All+matches">
+          <input type="hidden" name="name_weight" value="5">
+          <input type="hidden" name="param_weight" value="3">
+          <input type="hidden" name="doc_weight" value="2">
+          <input name="query_string" onfocus="if(this.value=='Search API')this.value='';" onblur="if(this.value=='')this.value='Search API';" value="Search API">
+          <input type="submit" value="Go"></div>
+        </form>
+      </td>
+    </tr>
+  </table>
+
+		<div id="monitor_frame">
+    	
+	      <div id="header_class">
+	      <div id="header_logo">
+		 <a href="http://www.project-open.com/"><img id='intranetlogo' src="/logo.gif" alt="logo" border='0'></a>
+
+	      </div>
+	      <div id="header_plugin_left">
+		 
+	      </div>
+	      <div id="header_plugin_right">
+		 
+	      </div>
+	      <div class="header_line">
+			<table cellpadding='0' cellspacing='0' border='0'>
+			<tr>
+			<td><span id="general_messages_icon"><span id="general_messages_icon_span"></span></span>&nbsp;</td>
+			<td><span class='header_buttons'><span class='header_welcome'><a href="/intranet/users/view?user_id=624">Welcome System Administrator</span></a> |&nbsp;<a href="/intranet/whos-online">1 user online</a>
+ |&nbsp;<a href="/intranet/components/add-stuff?return_url=%2fintranet%2fprojects%2fview%3fproject_id%3d37450%26view_name%3dcomponent%26plugin_id%3d49789&amp;page_url=%2fintranet%2fprojects%2fview">Add Portlet</a>&nbsp;|&nbsp;<a href="/intranet/components/component-action?return_url=%2fintranet%2fprojects%2fview%3fproject_id%3d37450%26view_name%3dcomponent%26plugin_id%3d49789&amp;action=reset&amp;plugin_id=0&amp;page_url=%2fintranet%2fprojects%2fview">Reset Portlets</a>&nbsp;|&nbsp;<a href="http://www.project-open.net/en/page-intranet-projects-view">Context Help</a> |&nbsp;<a href="/intranet/report-bug-on-page?page_url=%2fintranet%2fprojects%2fview%3fproject_id%3d37450%26view_name%3dcomponent%26plugin_id%3d49789">Report a bug on this page</a> |<span class='header_logout'>&nbsp;<a class="nobr" href='/register/logout'>Log Out</a>
+</span></span></td>
+			</tr>
+			<tr>
+			<td colspan=2><div id="main_search">
+	      <form action="/intranet/search/go-search" method="post" name="surx">
+		<input class=surx name=query_string size=40 value="Search" onClick="javascript:this.value = ''">
+		<input type="hidden" name="target" value="content">
+		<input alt="Go" type="submit" value="Go" name="image">
+	      </form>
+	</div></td>
+			</tr>
+			</table>
+	      </div>
+	      <div id="header_skin_select">
+		 
+	      </div>   
+	   </div>
+    	 
+	    <div id="main">
+	       <div id="navbar_main_wrapper">
+		  <ul id="navbar_main" class="sm"><li class='unselected'><a href='/intranet/'><span>Home</span></a></li>
+
+
+
+<li class='unselected'><a href='/intranet/users/view?user_id=624'>
+		<span>My Settings</span></a>
+		<ul><li class='unselected'><a href='/intranet/users/view?user_id=624'>My Account</a></li>
+    	    
+
+<li class='sm-submenu-item'><a href='/intranet/users/password-update?user_id=624'>Change Password</a></li>
+
+<li class='unselected'><a href="/intranet/admin/menus/index?return_url=%2fintranet%2fprojects%2fview%3fproject_id%3d37450%26view_name%3dcomponent%26plugin_id%3d51086&top_menu_depth=1&top_menu_id=476"><span><img src="/intranet/images/navbar_default/wrench.png" border=0 title="Click here to administrate the navigation bar" alt="Click here to administrate the navigation bar"></span></a></li>
+
+</ul></ul>
+	       </div>
+	       <div id="main_header">
+                  <div id="main_maintenance_bar"></div>
+	       </div>
+	    </div>
+    
+         <div id="navbar_sub_wrapper">
+            <span id='titleSubmenu'></span>
+            <ul id="navbar_sub">
+              <li class="unselected"><div class="navbar_unselected"><a href=" /intranet/projects/view?&amp;project_id=37450"><span>Summary</span></a></div></li>
+<li class="unselected"><div class="navbar_unselected"><a href="/intranet/projects/view?&amp;project_id=37450&amp;view_name=files"><span>Files</span></a></div></li>
+<li class="unselected"><div class="navbar_unselected"><a href="/intranet/projects/view?&amp;project_id=37450&amp;view_name=finance"><span>Finance</span></a></div></li>
+<li class="unselected"><div class="navbar_unselected"><a href="/intranet-timesheet2-tasks/index?&amp;project_id=37450&amp;view_name=im_timesheet_task_list"><span>Tasks</span></a></div></li>
+<li class="unselected"><div class="navbar_unselected"><a href="/intranet-expenses/index?&amp;project_id=37450&amp;view_name=not_used"><span>Expenses</span></a></div></li>
+<li class="unselected"><div class="navbar_unselected"><a href="/intranet/projects/view?project_id=37450&view_name=component&amp;plugin_id=535"><span> Cost </span></a></div></li>
+<li class="selected"><div class="navbar_selected"><a href="/intranet/projects/view?project_id=37450&view_name=component&amp;plugin_id=49789"><span>Milestone Slip Tracker</span></a></div></li>
+<li class="unselected"><div class="navbar_unselected"><a href="/intranet/projects/view?project_id=37450&view_name=component&amp;plugin_id=51086"><span> Budget Items</span></a></div></li>
+<li class="unselected"><div class="navbar_unselected"><a href="/intranet/admin/menus/index?top_menu_id=497"><span><img src="/intranet/images/navbar_default/wrench.png" border=0 title="Click here to administrate the navigation bar" alt="Click here to administrate the navigation bar"></span></a></div></li>
+
+            </ul>
+         </div>
+        
+	<div id="slave">
+	<div id="slave_content">
+	<div class="filter-list" id="filter-list">
+		<a id="sideBarTab" href="#"><img id="sideBarTabImage" border="0" title="Click to show side menu" alt="sideBar" src="/intranet/images/navbar_default/nav-hamburger-active.png"></a>
+		<div class="filter" id="sidebar">
+			<div id="sideBarContentsInner">
+			     <div title="Click to close side menu" id="sidebar-close-button"></div>
+			     
+      	<div class='filter-block'>
+        <div class='filter-title'>
+		Admin Project
+        </div>
+	<ul><li><A href="/intranet/projects/new?parent_id=37450">Create a Subproject</A><br></li>
+
+    <li><A href="/intranet/projects/clone?parent_project_id=37450">Clone this project</A><img src=/intranet/images/navbar_default/help.png border=0 title="You can 'clone' a project in order to save time to setup a similar project." alt="You can 'clone' a project in order to save time to setup a similar project."></li>
+
+    <li><A href="/intranet/projects/add-tasks-from-template?parent_project_id=37450">Add tasks from template</A><img src=/intranet/images/navbar_default/help.png border=0 title="Import all tasks from a template to this project. Existing tasks with the same name will be overwritten." alt="Import all tasks from a template to this project. Existing tasks with the same name will be overwritten."></li>
+</ul>
+      	</div>
+	<hr/>
+    
+      	<div class='filter-block'>
+        <div class='filter-title'>
+		Import and Export
+        </div>
+	<ul>
+        <li><A href="/intranet-ganttproject/microsoft-project.xml?project_id=37450"
+        >Export to Microsoft Project</A>
+<!--	<a href="http://www.sourceforge.net/projects/projectlibre"><img src=/intranet/images/external.png></a> -->
+	</li>
+        <li><A href="/intranet-ganttproject/microsoft-project.xml?project_id=37450"
+        >Export to ProjectLibre</A>
+<!--	<a href="http://www.sourceforge.net/projects/projectlibre"><img src=/intranet/images/external.png></a> -->
+	</li>
+        <li><A href="/intranet-ganttproject/gantt-project.gan?project_id=37450"
+        >Export to GanttProject</A>
+<!--	<a href="http://www.sourceforge.net/projects/ganttproject"><img src=/intranet/images/external.png></a> -->
+	</li>
+	<br>
+
+        <li><A href="/intranet-ganttproject/gantt-upload?import_type=gantt_project&return_url=%2fintranet%2fprojects%2fview%3fproject_id%3d37450%26view_name%3dcomponent%26plugin_id%3d49789&project_id=37450"
+        >Import from Microsoft Project</A>
+	</li>
+
+        <li><A href="/intranet-ganttproject/gantt-upload?import_type=gantt_project&return_url=%2fintranet%2fprojects%2fview%3fproject_id%3d37450%26view_name%3dcomponent%26plugin_id%3d49789&project_id=37450"
+        >Import from Project Libre</A>
+	</li>
+
+        <li><A href="/intranet-ganttproject/gantt-upload?import_type=gantt_project&return_url=%2fintranet%2fprojects%2fview%3fproject_id%3d37450%26view_name%3dcomponent%26plugin_id%3d49789&project_id=37450"
+        >Import from GanttProject</A>
+	</li>
+</ul>
+      	</div>
+    
+			</div>
+		</div>
+		<div class="fullwidth-list" id="fullwidth-list">
+			<div class="developer-support-adp-box-off"><span class="developer-support-adp-file-off"><a href="/api-doc/content-page-view?source_p=1&amp;path=/packages/intranet-core/www/master.adp" style="text-decoration: None;"> / web / projop / packages / intranet-core / www / master</a></span><div class="developer-support-adp-output-off"> 
+	<div class="component">
+
+	<table width="100%">
+	<tr>
+	<td>
+	  <div class="component_header_rounded" >
+	    <div class="component_header">
+	      <div class="component_title">Milestone Slip Tracker</div>
+	      <div class="component_icons"><a class="icon_maximize" href="/intranet/components/activate-component?return_url=%2fintranet%2fprojects%2fview%3fproject_id%3d37450&amp;plugin_id=49789"><span class="icon_maximize">maximize</span></a></div>
+	    </div>
+	  </div>
+	</td>
+	</tr>
+	<tr>
+	<td colspan=2>
+	  <div class="component_body"><div id=milestone_tracker_40726848></div>
+<script type='text/javascript'>
+
+Ext.define('Ext.chart.series.MilestoneLine', {
+    extend: 'Ext.chart.series.Line',
+    type: 'milestoneline',
+    alias: 'series.milestoneline',
+
+    drawSeries: function() {
+	var me = this,
+        chart = me.chart,
+        store = chart.getChartStore();
+
+	store.each(function(record) {
+	    for (var key in record.data) {
+		var value = record.data[key];
+		if ("string" == typeof value && "" == value) { record.data[key] = undefined; }
+	    }
+	});
+        this.callParent(arguments);
+    }
+});
+
+Ext.require(['Ext.chart.*', 'Ext.Window', 'Ext.fx.target.Sprite', 'Ext.layout.container.Fit']);
+Ext.onReady(function () {
+
+    var store = Ext.create('Ext.data.JsonStore', {
+	fields: ['d', 'm37474', 'm37492', 'm37489', 'm37453', 'm50906'],
+	data: [
+//                         Generate Concepts              Profile Motor Power            MQ Represented                 Define Specifications          Sign-Off
+{d:new Date('2016-10-22'), m37474:new Date('2016-11-09'), m37492:new Date('2017-09-13'), m37489:new Date('2017-05-12'), m37453:new Date('2017-02-23'), m50906:new Date('2017-12-11')},
+{d:new Date('2016-12-20'), m37474:new Date('2016-11-09'), m37492:new Date('2017-09-13'), m37489:new Date('2017-05-12'), m37453:new Date('2017-02-23'), m50906:new Date('2017-12-11')},
+{d:new Date('2017-01-20'), m37474:new Date('2017-02-09'), m37492:new Date('2017-11-13'), m37489:new Date('2017-07-12'), m37453:new Date('2017-04-23'), m50906:new Date('2018-02-16')},
+{d:new Date('2017-02-27'), m37474:new Date('2017-02-27'), m37492:new Date('2017-11-13'), m37489:new Date('2017-07-12'), m37453:new Date('2017-05-23'), m50906:new Date('2018-02-16')},
+{d:new Date('2017-03-13'), m37474:undefined,              m37492:new Date('2017-11-13'), m37489:new Date('2017-07-12'), m37453:new Date('2017-05-23'), m50906:new Date('2018-02-16')},
+{d:new Date('2017-04-20'), m37474:undefined,              m37492:new Date('2017-11-13'), m37489:new Date('2017-07-12'), m37453:new Date('2017-05-23'), m50906:new Date('2018-02-16')},
+{d:new Date('2017-05-03'), m37474:undefined,              m37492:new Date('2017-12-13'), m37489:new Date('2017-08-21'), m37453:new Date('2017-05-23'), m50906:new Date('2018-03-16')},
+{d:new Date('2017-06-17'), m37474:undefined,              m37492:new Date('2017-12-13'), m37489:new Date('2017-08-21'), m37453:new Date('2017-06-17'), m50906:new Date('2018-03-16')},
+{d:new Date('2017-08-02'), m37474:undefined,              m37492:new Date('2017-12-13'), m37489:new Date('2017-08-21'), m37453:undefined,              m50906:new Date('2018-03-16')},
+{d:new Date('2017-09-15'), m37474:undefined,              m37492:new Date('2017-12-13'), m37489:undefined,              m37453:undefined,              m50906:new Date('2018-03-16')},
+{d:new Date('2017-11-05'), m37474:undefined,              m37492:undefined,              m37489:undefined,              m37453:undefined,              m50906:new Date('2018-03-16')},
+{d:new Date('2017-12-26'), m37474:undefined,              m37492:undefined,              m37489:undefined,              m37453:undefined,              m50906:new Date('2018-03-16')},
+{d:new Date('2018-01-23'), m37474:undefined,              m37492:undefined,              m37489:undefined,              m37453:undefined,              m50906:new Date('2018-03-16')}
+        ]
+    });
+
+    chart = new Ext.chart.Chart({
+	width: 600,
+	height: 350,
+	animate: false,
+	store: store,
+	renderTo: 'milestone_tracker_40726848',
+	legend: { position: 'right' },
+	axes: [{
+	    type: 'Time',
+	    position: 'left',
+	    fields: ['m37474', 'm37492', 'm37489', 'm37453', 'm50906'],
+	    dateFormat: 'j M y',
+	    constrain: false,
+	    step: [Ext.Date.MONTH, 1],
+	    fromDate: new Date('2016-08-06'),
+	    toDate: new Date('2018-04-01'),
+	}, {
+	    type: 'Time',
+	    position: 'bottom',
+	    fields: 'date',
+	    dateFormat: 'j M y',
+	    constrain: false,
+	    step: [Ext.Date.MONTH, 1],
+	    fromDate: new Date('2016-10-22'),
+	    toDate: new Date('2018-01-01'),
+	    label: {rotate: {degrees: 315}}
+	}],
+	series: [{
+	type: 'milestoneline', 
+	title: 'Generate concepts', 
+	axis: ['left','bottom'], 
+	xField: 'd', 
+	yField: 'm37474', 
+	markerConfig: { radius: 5, size: 5 }
+    }
+    , {
+	type: 'milestoneline', 
+	title: 'Profile motor power', 
+	axis: ['left','bottom'], 
+	xField: 'd', 
+	yField: 'm37492', 
+	markerConfig: { radius: 5, size: 5 }
+    }
+    , {
+	type: 'milestoneline', 
+	title: 'MQ Represented', 
+	axis: ['left','bottom'], 
+	xField: 'd', 
+	yField: 'm37489', 
+	markerConfig: { radius: 5, size: 5 }
+    }
+    , {
+	type: 'milestoneline', 
+	title: 'Define Specifications', 
+	axis: ['left','bottom'], 
+	xField: 'd', 
+	yField: 'm37453', 
+	markerConfig: { radius: 5, size: 5 }
+    }
+    , {
+	type: 'milestoneline', 
+	title: 'Sign-Off', 
+	axis: ['left','bottom'], 
+	xField: 'd', 
+	yField: 'm50906', 
+	markerConfig: { radius: 5, size: 5 }
+    }
+    ]
+    }
+)});
+</script>
+	  </div>
+	  <div class="component_footer">
+	    <div class="component_footer_hack"></div>
+	  </div>
+
+	</td>
+	</tr>
+	</table>
+	</div>
+    </div></div><!-- END
+/web/projop/packages/intranet-core/www/master (lvl 6)-->
+		</div>
+	</div>
+	</div>
+	</div>
+
+    </div> <!-- monitor_frame -->
+    <div class="footer_hack">&nbsp;</div>	
+    <div id="footer" style="visibility: visible">
+       Comments? Contact: 
+       <a href="mailto:fraber@fraber.de">
+	  fraber@fraber.de</a>.
+    </div>
+  
+  </BODY>
+</HTML>

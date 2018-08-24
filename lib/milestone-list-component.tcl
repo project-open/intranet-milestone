@@ -65,6 +65,12 @@ template::list::create \
 		@milestone_lines.on_track_html;noquote@
 	    }
 	}
+	main_project_name {
+	    label "[lang::message::lookup {} intranet-milestone.Project_Name {Project Name}]"
+	    display_template {
+		<a href=@milestone_lines.main_project_url;noquote@>@milestone_lines.main_project_name;noquote@</a> &nbsp;
+	    }
+	}
 	project_name {
 	    label "[lang::message::lookup {} intranet-milestone.Milestone_Name Name]"
 	    display_template {
@@ -103,22 +109,30 @@ set milestone_sql [im_milestone_select_sql \
 	-member_id $member_id \
 ]
 
+# ad_return_complaint 1 "<pre>$milestone_sql</pre>"
+
 set sql "
 	select	p.*,
+		main_p.project_id as main_project_id,
+		main_p.project_name as main_project_name,
 		to_char(p.end_date, :date_format) as end_date_formatted
-	from	($milestone_sql) p
-	where	1=1
-	order by p.end_date ASC
+	from	($milestone_sql) p,
+		im_projects main_p
+	where	main_p.tree_sortkey = tree_root_key(p.tree_sortkey)
+	order by
+		main_p.project_name,
+		p.end_date ASC
 "
 
 set cnt 0
-db_multirow -extend {milestone_chk on_track_html milestone_url return_url} milestone_lines milestones_lines $sql {
+db_multirow -extend {milestone_chk on_track_html milestone_url main_project_url return_url} milestone_lines milestones_lines $sql {
     set milestone_chk "<input type=\"checkbox\" 
 				name=\"milestone_id\" 
 				value=\"$project_id\" 
 				id=\"milestone_id,$project_id\">"
     set return_url [im_url_with_query]
     set milestone_url [export_vars -base "/intranet/projects/view" {project_id}]
+    set main_project_url [export_vars -base "/intranet/projects/view" {main_project_id}]
     set on_track_html [im_project_on_track_bb $on_track_status_id]
     incr cnt
 }
