@@ -132,7 +132,7 @@ db_multirow -extend {milestone_chk on_track_html milestone_url main_project_url 
 				id=\"milestone_id,$project_id\">"
     set return_url [im_url_with_query]
     set milestone_url [export_vars -base "/intranet/projects/view" {project_id}]
-    set main_project_url [export_vars -base "/intranet/projects/view" {main_project_id}]
+    set main_project_url [export_vars -base "/intranet/projects/view" {{project_id $main_project_id}}]
     set on_track_html [im_project_on_track_bb $on_track_status_id]
     incr cnt
 }
