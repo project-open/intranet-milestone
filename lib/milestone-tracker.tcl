@@ -16,7 +16,7 @@
 #	diagram_width
 #	diagram_height
 
-if {![info exists diagram_width]} { set diagram_width 300 }
+if {![info exists diagram_width]} { set diagram_width 600 }
 if {![info exists diagram_height]} { set diagram_height 300 }
 set main_project_id $project_id
 

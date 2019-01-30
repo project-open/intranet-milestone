@@ -37,8 +37,8 @@ Ext.onReady(function () {
     });
 
     chart = new Ext.chart.Chart({
-	width: 600,
-	height: 300,
+	width: @diagram_width@,
+	height: @diagram_height@,
 	animate: false,
 	store: store,
 	renderTo: '@diagram_id@',
