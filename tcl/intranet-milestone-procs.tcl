@@ -70,6 +70,7 @@ ad_proc -public im_milestone_tracker {
     -project_id:required
     {-diagram_width 300 }
     {-diagram_height 300 }
+    {-diagram_name_maxlen 30 }
     {-diagram_caption "" }
     {-diagram_title "Milestones" }
 } {
@@ -99,6 +100,7 @@ ad_proc -public im_milestone_tracker {
 		    [list project_id $project_id] \
 		    [list diagram_width $diagram_width] \
 		    [list diagram_height $diagram_height] \
+		    [list name_maxlen $diagram_name_maxlen] \
 		    [list diagram_title $diagram_title] \
 		    [list diagram_caption $diagram_caption] \
     ]

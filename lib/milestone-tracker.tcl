@@ -18,6 +18,7 @@
 
 if {![info exists diagram_width]} { set diagram_width 600 }
 if {![info exists diagram_height]} { set diagram_height 300 }
+if {![info exists diagram_name_maxlen]} { set diagram_name_maxlen 30 }
 set main_project_id $project_id
 
 # Create a random ID for the diagram
@@ -61,7 +62,13 @@ if {1 || [llength $milestone_list] < 3} {
 
 if {"" eq $milestone_list} { set milestone_list {0} }
 if {[llength $milestone_list] < 3} { set show_diagram_p 0 }
-foreach mid $milestone_list { set milestone_name_hash($mid) [acs_object_name $mid] }
+foreach mid $milestone_list {
+    set name [acs_object_name $mid]
+    if {[string length $name] > $diagram_name_maxlen} {
+	set name "[string range $name 0 $diagram_name_maxlen]..."
+    }
+    set milestone_name_hash($mid) $name
+}
 
 
 # -------------------------------------------------------------
