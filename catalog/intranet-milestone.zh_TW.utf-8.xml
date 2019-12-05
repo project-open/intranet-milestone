@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<message_catalog package_key="intranet-milestone" locale="zh_TW" charset="utf-8">
+
+  <msg key="Current_Milestones">當前的里程碑</msg>
+  <msg key="Deadline">截止日期</msg>
+  <msg key="Late_Milestones">過期里程碑</msg>
+  <msg key="Milestone_Name">名稱</msg>
+  <msg key="Milestone_Status">狀態</msg>
+  <msg key="Milestone_Type">類型</msg>
+  <msg key="On_track_status">OK？</msg>
+</message_catalog>
