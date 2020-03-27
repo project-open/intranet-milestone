@@ -241,6 +241,14 @@ if {$tracker_days < 365} {
     set tracker_step_uom "Ext.Date.MONTH"
     set tracker_step_units 1
 }
+if {$tracker_days < 132} {
+    set tracker_step_uom "Ext.Date.DAY"
+    set tracker_step_units 5
+}
+if {$tracker_days < 66} {
+    set tracker_step_uom "Ext.Date.DAY"
+    set tracker_step_units 2
+}
 if {$tracker_days < 33} {
     set tracker_step_uom "Ext.Date.DAY"
     set tracker_step_units 1
@@ -276,6 +284,36 @@ if {$yrange_days < 33} {
 
 
 # ad_return_complaint 1 $yrange_duration_months
+
+
+
+# -----------------------------------------------------------------
+# Store with Baselines
+# -----------------------------------------------------------------
+
+set baseline_sql "
+select	t.*
+from	(select	 b.baseline_id,
+		 b.baseline_name,
+		 im_category_from_id(b.baseline_status_id) as baseline_status,
+		 im_category_from_id(b.baseline_type_id) as baseline_type,
+		 o.creation_date::date as creation_date
+	from	 im_baselines b,
+		 acs_objects o
+	where	 b.baseline_project_id = $main_project_id and
+		 b.baseline_id = o.object_id
+UNION
+	select	 0 as baseline_id,
+		 '<Today>' as baseline_name,
+		 null as baseline_status,
+		 null as baseline_type,
+		 now()::date as creation_date
+	) t
+order by baseline_id DESC
+"
+set baseline_store_tuple [im_sencha_sql_to_store -sql $baseline_sql]
+set baseline_store_json [lindex $baseline_store_tuple 0]
+set baseline_store_columns [lindex $baseline_store_tuple 1]
 
 
 
