@@ -304,7 +304,7 @@ from	(select	 b.baseline_id,
 		 b.baseline_id = o.object_id
 UNION
 	select	 0 as baseline_id,
-		 '<Today>' as baseline_name,
+		 'Today' as baseline_name,
 		 null as baseline_status,
 		 null as baseline_type,
 		 now()::date as creation_date
@@ -337,28 +337,28 @@ set cnt 0
 foreach audit_date $audit_dates {
 
     # Reformat date for javascript
-    regexp {^(....)\-(..)\-(..)$} $audit_date match year month day
-    set data_line "{date: new Date('$year-$month-$day')"
+    regexp {^(....)\-(..)\-(..)$} $audit_date match audit_year audit_month audit_day
+    set data_line "{date: new Date('$audit_year-$audit_month-$audit_day'), horizon: new Date('$audit_year-$audit_month-$audit_day')"
 
     # Loop through the columns
     set row "<td><nobr>$audit_date</nobr></td>"
     foreach mid $milestone_list {
 	set key "$mid-$audit_date"
-	set v ""
-	if {[info exists cell_hash($key)]} { set v $cell_hash($key) }
-	regexp {^(....)\-(..)\-(..)$} $v match year month day
-	set v_js "new Date('$year-$month-$day')"
+	set series_v ""
+	if {[info exists cell_hash($key)]} { set series_v $cell_hash($key) }
+	regexp {^(....)\-(..)\-(..)$} $series_v match series_year series_month series_day
+	set series_v_js "new Date('$series_year-$series_month-$series_day')"
 
 	# Skip values of milestones after they have been closed
 	# Exception: The very first entry in order to show something in case of demo data etc.
 	set milestone_max_end_date $milestone_end_date_hash($mid)
 	if {0 != $cnt && $audit_date > $milestone_max_end_date} {
-	    set v_js "undefined"
-	    set v "undefined"
+	    set series_v_js "undefined"
+	    set series_v "undefined"
 	}
 
-	append data_line ", m$mid: $v_js"
-	append row "<td><nobr>$v</nobr></td>\n"
+	append data_line ", m$mid: $series_v_js"
+	append row "<td><nobr>$series_v</nobr></td>\n"
     }
     append data_line "}"
     lappend data_list $data_line
@@ -380,6 +380,7 @@ append data_json "\t\]\n"
 
 # Compile JSON for field names
 set fields {}
+lappend fields "'horizon'"
 foreach mid $milestone_list {
     lappend fields "'m$mid'"
 }
@@ -392,24 +393,38 @@ set fields_json "\['date', $fields_joined\]"
 
 # Complile the series specs
 set series {}
+
+lappend series "{
+	type: 'line', 
+	title: 'Horizon', 
+	axis: \['left','bottom'\], 
+	xField: 'date', 
+	yField: 'horizon', 
+	markerConfig: { radius: 0, size: 0 }
+}"
+
+
 foreach id $milestone_list {
     set milestone_name $milestone_name_hash($id)
     lappend series "{
 	type: 'milestoneline', 
-	title: '$milestone_name', 
-	axis: \['left','bottom'\], 
-	xField: 'date', 
-	yField: 'm$id', 
-	markerConfig: { radius: 5, size: 5 },
-	tips: {
-	        trackMouse: false,
-		anchor: 'right',
-  		width: 200,
-  		height: 30,
-  		renderer: function(storeItem, item) {
-			var t = item.series.title;
-			this.setTitle(t);
- 	        }
+        title: '$milestone_name', 
+        axis: \['left','bottom'\], 
+        xField: 'date', 
+        yField: 'm$id', 
+        markerConfig: { radius: 5, size: 5 },
+        tips: {
+            trackMouse: false,
+            anchor: 'right',
+            width: 200,
+            height: 60,
+            renderer: function(storeItem, item) {
+                var seriesTitle = item.series.title;
+                var seriesYField = item.series.yField;
+                var xDate = storeItem.get('date').toISOString().split('T')\[0\];
+                var yDate = storeItem.get(seriesYField).toISOString().split('T')\[0\];
+                this.setTitle(seriesTitle+'<br>On date: '+xDate+'<br>Estimated end: '+yDate);
+            }
         }
     }
     "

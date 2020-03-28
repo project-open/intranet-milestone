@@ -23,6 +23,8 @@ Ext.define('Ext.chart.series.MilestoneLine', {
 
         // Loop throught the store and convert empty strings into "undefined" values.
         // Undefined values are skipped by the underlying series.Line diagram.
+	// This is important so that the diagram doesn't show the audit points after
+	// a phase has been finished.
         store.each(function(record) {
             for (var key in record.data) {
                 var value = record.data[key];
@@ -37,13 +39,16 @@ Ext.define('Ext.chart.series.MilestoneLine', {
 
 Ext.onReady(function () {
     
-    var marginTime = 7 * 24 * 3600 * 1000;		// N * days (milliseconds)
+    // Should we have some days before and after the actual lines?
+    var marginTime = 0 * 24 * 3600 * 1000;		// N * days (milliseconds)
 
+    // The store of with milestone data. Calculated by TCL back-end
     var milestoneStore = Ext.create('Ext.data.JsonStore', {
         fields: @fields_json;noquote@,
         data: @data_json;noquote@
     });
 
+    // The store with baselines and a line for "today"
     var baselineStore = @baseline_store_json;noquote@;
 
     var chart = new Ext.chart.Chart({
@@ -145,9 +150,9 @@ Ext.onReady(function () {
         /**                                                                                                                                                     
          * Draw a red vertical bar to indicate where we are today                                                                                               
          */
-        drawAxisNow: function() {
+        drawBaselines: function() {
             var me = this;
-            if (me.debugAxis) console.log('PO.milestone.MilestoneChart.drawAxisNow: Starting');
+            if (me.debugAxis) console.log('PO.milestone.MilestoneChart.drawBaselines: Starting');
             
             var surfaceWidth = me.surface.width;
             var surfaceHeight = me.surface.height;
@@ -189,12 +194,11 @@ Ext.onReady(function () {
 
             });
 
-            if (me.debugAxis) console.log('PO.milestone.MilestoneChart.drawAxisNow: Finished');
+            if (me.debugAxis) console.log('PO.milestone.MilestoneChart.drawBaselines: Finished');
         }
 
     });
-
-    chart.drawAxisNow();
+    chart.drawBaselines();
 
 });
 </script>
