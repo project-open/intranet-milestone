@@ -400,6 +400,7 @@ lappend series "{
 	axis: \['left','bottom'\], 
 	xField: 'date', 
 	yField: 'horizon', 
+        showInLegend: false,
 	markerConfig: { radius: 0, size: 0 }
 }"
 
