@@ -62,18 +62,22 @@ Ext.onReady(function () {
         },
         axes: [{
             type: 'Time',
+	    title: '@milestone_end_date_l10n@',
             position: 'left',
             fields: [@fields_joined;noquote@],
-            dateFormat: 'j M y',
+            // dateFormat: 'j M y',
+            dateFormat: 'Y-m-d',
             constrain: false,
             step: [@yrange_step_uom@, @yrange_step_units@],
             fromDate: @yrange_start_date_js;noquote@,
             toDate: @yrange_end_date_js;noquote@,
         }, {
             type: 'Time',
+	    title: '@date_of_planning_l10n@',
             position: 'bottom',
             fields: 'date',
-            dateFormat: 'j M y',
+            // dateFormat: 'j M y',
+            dateFormat: 'Y-m-d',
             constrain: false,
             step: [@tracker_step_uom@, @tracker_step_units@],
             fromDate: new Date(@tracker_start_date_js;noquote@.getTime() - marginTime),
@@ -152,8 +156,6 @@ Ext.onReady(function () {
          */
         drawBaselines: function() {
             var me = this;
-            if (me.debugAxis) console.log('PO.milestone.MilestoneChart.drawBaselines: Starting');
-            
             var surfaceWidth = me.surface.width;
             var surfaceHeight = me.surface.height;
             var axisHeight = 10;
@@ -193,10 +195,7 @@ Ext.onReady(function () {
 		if (labelY > yAxis.y) { labelY = yAxis.y - yAxis.length; }
 
             });
-
-            if (me.debugAxis) console.log('PO.milestone.MilestoneChart.drawBaselines: Finished');
         }
-
     });
     chart.drawBaselines();
 

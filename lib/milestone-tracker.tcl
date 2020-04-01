@@ -30,6 +30,15 @@ set show_debug_p 0
 set audit_dates_max_entries 15
 
 
+# -----------------------------------------------------------------
+# Localization
+# -----------------------------------------------------------------
+
+set milestone_end_date_l10n [lang::message::lookup "" intranet-milestone.Milestone_End_Date "Milestone End Date"]
+set date_of_planning_l10n [lang::message::lookup "" intranet-milestone.Date_of_Planning "Date of Planning"]
+set milestone_l10n [lang::message::lookup "" intranet-milestone.Milestone "Milestone"]
+
+
 # -------------------------------------------------------------
 # Compile the list of milestones to be reported
 # -------------------------------------------------------------
@@ -417,14 +426,18 @@ foreach id $milestone_list {
         tips: {
             trackMouse: false,
             anchor: 'right',
-            width: 200,
+            width: 250,
             height: 60,
             renderer: function(storeItem, item) {
                 var seriesTitle = item.series.title;
                 var seriesYField = item.series.yField;
                 var xDate = storeItem.get('date').toISOString().split('T')\[0\];
                 var yDate = storeItem.get(seriesYField).toISOString().split('T')\[0\];
-                this.setTitle(seriesTitle+'<br>On date: '+xDate+'<br>Estimated end: '+yDate);
+                this.setTitle(
+			'$milestone_l10n: '+seriesTitle+
+			'<br>$date_of_planning_l10n: '+xDate+ 
+			'<br>$milestone_end_date_l10n: '+yDate
+		);
             }
         }
     }
@@ -434,4 +447,7 @@ set series_json [join $series ", "]
 
 # ad_return_complaint 1 $fields_joined
 # ad_return_complaint 1 "<pre>$fields_json\n\n$data_json</pre>"
+
+
+
 
