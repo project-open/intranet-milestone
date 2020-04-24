@@ -144,6 +144,8 @@ Ext.onReady(function () {
 
             var fromDate = xAxis.fromDate.getTime();
             var toDate = xAxis.toDate.getTime();
+	    var diffDate = Math.abs(1.0*toDate - 1.0*fromDate);
+	    if (diffDate < 1.0) return null;
             var dDate = d.getTime();
             var perc = (dDate - fromDate) / (toDate - fromDate);
             return xStart + (xEnd - xStart) * perc;
@@ -151,8 +153,8 @@ Ext.onReady(function () {
             if (me.debugAxis) console.log('PO.milestone.MilestoneChart.date2x: Finished');
         },
 
-        /**                                                                                                                                                     
-         * Draw a red vertical bar to indicate where we are today                                                                                               
+        /**
+         * Draw a red vertical bar to indicate where we are today
          */
         drawBaselines: function() {
             var me = this;
@@ -167,10 +169,14 @@ Ext.onReady(function () {
             var xEnd = xAxis.x + xAxis.length;
 
             var labelY = yAxis.y - yAxis.length;
+
             baselineStore.each(function(model) {
                 var creation_date = model.get('creation_date');
+		if (!creation_date) return;
                 var dateX = me.date2x(new Date(creation_date));
-		
+		if (null === dateX) return;
+
+		console.log(model);
                 var baselineLine = me.surface.add({
                     type:'rect', 
                     x: dateX, 

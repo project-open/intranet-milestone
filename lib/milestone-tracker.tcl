@@ -70,7 +70,7 @@ if {1 || [llength $milestone_list] < 3} {
 }
 
 if {"" eq $milestone_list} { set milestone_list {0} }
-if {[llength $milestone_list] < 3} { set show_diagram_p 0 }
+if {[llength $milestone_list] < 1} { set show_diagram_p 0 }
 foreach mid $milestone_list {
     set name [acs_object_name $mid]
     if {[string length $name] > $diagram_name_maxlen} {
@@ -136,11 +136,6 @@ if {"" eq $audit_dates} {
 }
 
 
-# ad_return_complaint 1 "<table><tr><td>[join $diff_list "</td><td>"]</td></tr><tr><td>[join $audit_dates "</td><td>"]</td></tr></table>"
-# ad_page_abort
-
-
-
 # -----------------------------------------------
 # Determine Start- and End date for the Tracker
 #
@@ -148,12 +143,33 @@ set tracker_start_date [lindex $audit_dates 0]
 set tracker_end_date [lindex $audit_dates end]
 set yrange_start_date $tracker_start_date
 set yrange_end_date $tracker_end_date
-
+set today [db_string today "select now()::date"]
 
 # Initialize the maximum end_date per milestone
 foreach mid $milestone_list {
     set milestone_end_date_hash($mid) "2000-01-01"
 }
+
+
+# Show the today bar only if within the display area
+set show_today_p 1
+if {$today < $tracker_start_date} { set show_today_p 0 }
+if {$today > $tracker_end_date} { set show_today_p 0 }
+
+
+if {[llength $audit_dates] < 2} { set show_diagram_p 0 }
+
+
+
+if {0} {
+    ad_return_complaint 1 "<table>
+	<tr><td>diff_list=[join $diff_list "</td><td>"]</td></tr>
+	<tr><td>audit_dates=[join $audit_dates "</td><td>"]</td></tr>
+	</table>"
+    ad_page_abort
+}
+
+
 
 
 # -------------------------------------------------------------
@@ -300,6 +316,16 @@ if {$yrange_days < 33} {
 # Store with Baselines
 # -----------------------------------------------------------------
 
+set baseline_sql_today "
+UNION
+	select	 0 as baseline_id,
+		 'Today' as baseline_name,
+		 null as baseline_status,
+		 null as baseline_type,
+		 now()::date as creation_date
+"
+if {!$show_today_p} { set baseline_sql_today "" }
+
 set baseline_sql "
 select	t.*
 from	(select	 b.baseline_id,
@@ -311,12 +337,7 @@ from	(select	 b.baseline_id,
 		 acs_objects o
 	where	 b.baseline_project_id = $main_project_id and
 		 b.baseline_id = o.object_id
-UNION
-	select	 0 as baseline_id,
-		 'Today' as baseline_name,
-		 null as baseline_status,
-		 null as baseline_type,
-		 now()::date as creation_date
+$baseline_sql_today
 	) t
 order by baseline_id DESC
 "
@@ -324,6 +345,7 @@ set baseline_store_tuple [im_sencha_sql_to_store -sql $baseline_sql]
 set baseline_store_json [lindex $baseline_store_tuple 0]
 set baseline_store_columns [lindex $baseline_store_tuple 1]
 
+#ad_return_complaint 1 "baseline_sql_today=$baseline_sql_today<br>baseline_store_json=$baseline_store_json"
 
 
 # -----------------------------------------------------------------
