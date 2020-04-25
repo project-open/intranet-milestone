@@ -52,9 +52,6 @@ Ext.onReady(function () {
     var baselineStore = @baseline_store_json;noquote@;
 
     var chart = new Ext.chart.Chart({
-        renderTo: '@diagram_id@',
-        width: @diagram_width@,
-        height: @diagram_height@,
         animate: false,
         store: milestoneStore,
         legend: { 
@@ -80,8 +77,6 @@ Ext.onReady(function () {
             dateFormat: 'Y-m-d',
             constrain: false,
             step: [@tracker_step_uom@, @tracker_step_units@],
-            fromDate: new Date(@tracker_start_date_js;noquote@.getTime() - marginTime),
-            toDate: new Date(@tracker_end_date_js;noquote@.getTime() + marginTime),
             label: {rotate: {degrees: 315}}
         }],
         series: [@series_json;noquote@],
@@ -203,6 +198,62 @@ Ext.onReady(function () {
             });
         }
     });
+
+    // Panel around diagram buttons for zoom in/out
+    var panel = Ext.create('widget.panel', {
+        width: @diagram_width@,
+        height: @diagram_height@,
+        title: '@diagram_title@',
+        renderTo: '@diagram_id@',
+        layout: 'fit',
+        header: false,
+
+        tbar: [
+	    '->',
+	    {
+		id: 'milestone_zoom_in',
+		xtype: 'button',
+		text: 'Show actual data points',
+		icon: '/intranet/images/navbar_default/zoom_in.png',
+		toggleGroup: 'milestone_zoom',
+		enableToggle: true,
+		pressed: true,
+		listeners: {
+		    toggle: function(button, pressed, eOpts) {
+			if (!pressed) return;
+			console.log('milestone-tracker.zoom_in:');
+			var idx = milestoneStore.find('id', 'start'); milestoneStore.removeAt(idx);
+			var idx = milestoneStore.find('id', 'end'); milestoneStore.removeAt(idx);
+		    }
+		}
+	    },
+	    {
+		id: 'milestone_zoom_out',
+		xtype: 'button',
+		text: 'Show entire project',
+		icon: '/intranet/images/navbar_default/zoom_out.png',
+		enableToggle: true,
+		pressed: false,
+		toggleGroup: 'milestone_zoom',
+		listeners: {
+		    toggle: function(button, pressed, eOpts) {
+			if (!pressed) return;
+			console.log('milestone-tracker.zoom_out:');
+			var idx = milestoneStore.find('id', 'start'); milestoneStore.removeAt(idx);
+			var idx = milestoneStore.find('id', 'end'); milestoneStore.removeAt(idx);
+			milestoneStore.add(
+			    {id: 'start', date: new Date('@project_start_date@'), horizon: new Date('@project_start_date@')},
+			    {id: 'end', date: new Date('@project_end_date@'), horizon: new Date('@project_end_date@')}
+			);			
+		    }
+		}
+	    },
+	    '->'
+        ],
+
+        items: chart
+    });
+
     chart.drawBaselines();
 
 });

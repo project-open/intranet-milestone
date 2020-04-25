@@ -40,6 +40,17 @@ set milestone_l10n [lang::message::lookup "" intranet-milestone.Milestone "Miles
 
 
 # -------------------------------------------------------------
+# Get information about the project
+# -------------------------------------------------------------
+
+db_1row project_info "
+	select	start_date::date as project_start_date,
+		end_date::date as project_end_date
+	from	im_projects p
+	where	p.project_id = :main_project_id
+"
+
+# -------------------------------------------------------------
 # Compile the list of milestones to be reported
 # -------------------------------------------------------------
 
