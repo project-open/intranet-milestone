@@ -2,11 +2,14 @@
 <div id=@diagram_id@></div>
 <script type='text/javascript'>
 
+Ext.Loader.setPath('PO', '/sencha-core');
+
 Ext.require([
     'Ext.chart.*', 
     'Ext.Window', 
     'Ext.fx.target.Sprite', 
-    'Ext.layout.container.Fit'
+    'Ext.layout.container.Fit',
+    'PO.view.menu.HelpMenu'
 ]);
 
 // Special variant of a line series for milestone tracker...
@@ -42,6 +45,9 @@ Ext.onReady(function () {
     // Should we have some days before and after the actual lines?
     var marginTime = 0 * 24 * 3600 * 1000;		// N * days (milliseconds)
 
+    // Where do we find GIFs?
+    var gifPath = "/intranet/images/navbar_default/";
+
     // The store of with milestone data. Calculated by TCL back-end
     var milestoneStore = Ext.create('Ext.data.JsonStore', {
         fields: @fields_json;noquote@,
@@ -62,7 +68,6 @@ Ext.onReady(function () {
 	    title: '@milestone_end_date_l10n@',
             position: 'left',
             fields: [@fields_joined;noquote@],
-            // dateFormat: 'j M y',
             dateFormat: 'Y-m-d',
             constrain: false,
             step: [@yrange_step_uom@, @yrange_step_units@],
@@ -73,10 +78,9 @@ Ext.onReady(function () {
 	    title: '@date_of_planning_l10n@',
             position: 'bottom',
             fields: 'date',
-            // dateFormat: 'j M y',
             dateFormat: 'Y-m-d',
             constrain: false,
-            step: [@tracker_step_uom@, @tracker_step_units@],
+//            step: [@tracker_step_uom@, @tracker_step_units@],
             label: {rotate: {degrees: 315}}
         }],
         series: [@series_json;noquote@],
@@ -199,7 +203,26 @@ Ext.onReady(function () {
         }
     });
 
-    // Panel around diagram buttons for zoom in/out
+
+    /* ***********************************************************************
+     * Help Menu
+     *********************************************************************** */
+    var helpMenu = Ext.create('PO.view.menu.HelpMenu', {
+        id: 'helpMenu',
+        debug: false,
+        style: {overflow: 'visible'},						// For the Combo popup
+        store: Ext.create('Ext.data.Store', { fields: ['text', 'url'], data: [
+            {text: 'Milestone Tracker Help', url: 'http://www.project-open.com/en/package-intranet-milestone'}
+//            {text: '-'},
+//            {text: 'Only Text'},
+//            {text: 'Google', url: 'http://www.google.com'}
+        ]})
+    });
+
+
+    /* ***********************************************************************
+     * Panel around diagram buttons for zoom in/out
+     *********************************************************************** */
     var panel = Ext.create('widget.panel', {
         width: @diagram_width@,
         height: @diagram_height@,
@@ -207,13 +230,11 @@ Ext.onReady(function () {
         renderTo: '@diagram_id@',
         layout: 'fit',
         header: false,
-
         tbar: [
 	    '->',
 	    {
 		id: 'milestone_zoom_in',
 		xtype: 'button',
-		text: 'Show actual data points',
 		icon: '/intranet/images/navbar_default/zoom_in.png',
 		toggleGroup: 'milestone_zoom',
 		enableToggle: true,
@@ -224,13 +245,15 @@ Ext.onReady(function () {
 			console.log('milestone-tracker.zoom_in:');
 			var idx = milestoneStore.find('id', 'start'); milestoneStore.removeAt(idx);
 			var idx = milestoneStore.find('id', 'end'); milestoneStore.removeAt(idx);
+		    },
+		    render: function(button) {	// button.tooltip doesn't work, so work around here...
+			Ext.create('Ext.tip.ToolTip', {target: button.getEl(), html: 'Show actual data points'});
 		    }
 		}
 	    },
 	    {
 		id: 'milestone_zoom_out',
 		xtype: 'button',
-		text: 'Show entire project',
 		icon: '/intranet/images/navbar_default/zoom_out.png',
 		enableToggle: true,
 		pressed: false,
@@ -245,10 +268,14 @@ Ext.onReady(function () {
 			    {id: 'start', date: new Date('@project_start_date@'), horizon: new Date('@project_start_date@')},
 			    {id: 'end', date: new Date('@project_end_date@'), horizon: new Date('@project_end_date@')}
 			);			
+		    },
+		    render: function(button) {	// button.tooltip doesn't work, so work around here...
+			Ext.create('Ext.tip.ToolTip', {target: button.getEl(), html: '<nobr>Show entire project</nobr>'});
 		    }
 		}
 	    },
-	    '->'
+	    '->',
+            { text: 'Help', icon: gifPath+'help.png', menu: helpMenu}
         ],
 
         items: chart
