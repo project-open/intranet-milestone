@@ -11,7 +11,7 @@ ad_page_contract {
     @param return_url the url to return to
     @author frank.bergmann@project-open.com
 } {
-    milestone_id:multiple,optional
+    milestone_id:integer,multiple,optional
     return_url
 }
 
