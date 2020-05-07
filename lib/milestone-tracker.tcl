@@ -327,37 +327,44 @@ if {$yrange_days < 33} {
 # Store with Baselines
 # -----------------------------------------------------------------
 
-set baseline_sql_today "
-UNION
-	select	 0 as baseline_id,
-		 'Today' as baseline_name,
-		 null as baseline_status,
-		 null as baseline_type,
-		 now()::date as creation_date
-"
-if {!$show_today_p} { set baseline_sql_today "" }
+if {[im_table_exists im_baselines]} {
 
-set baseline_sql "
-select	t.*
-from	(select	 b.baseline_id,
+    set baseline_sql_today "
+	UNION
+		select	0 as baseline_id,
+			'Today' as baseline_name,
+			null as baseline_status,
+			null as baseline_type,
+			now()::date as creation_date
+    "
+    if {!$show_today_p} { set baseline_sql_today "" }
+
+    set baseline_sql "
+	select	t.*
+	from	(select	 b.baseline_id,
 		 b.baseline_name,
 		 im_category_from_id(b.baseline_status_id) as baseline_status,
 		 im_category_from_id(b.baseline_type_id) as baseline_type,
 		 o.creation_date::date as creation_date
-	from	 im_baselines b,
+		 from	 im_baselines b,
 		 acs_objects o
-	where	 b.baseline_project_id = $main_project_id and
+		 where	 b.baseline_project_id = $main_project_id and
 		 b.baseline_id = o.object_id
-$baseline_sql_today
-	) t
-order by baseline_id DESC
-"
-set baseline_store_tuple [im_sencha_sql_to_store -sql $baseline_sql]
-set baseline_store_json [lindex $baseline_store_tuple 0]
-set baseline_store_columns [lindex $baseline_store_tuple 1]
+		 $baseline_sql_today
+		 ) t
+	order by baseline_id DESC
+    "
+    set baseline_store_tuple [im_sencha_sql_to_store -sql $baseline_sql]
+    set baseline_store_json [lindex $baseline_store_tuple 0]
+    set baseline_store_columns [lindex $baseline_store_tuple 1]
 
-#ad_return_complaint 1 "baseline_sql_today=$baseline_sql_today<br>baseline_store_json=$baseline_store_json"
+    #ad_return_complaint 1 "baseline_sql_today=$baseline_sql_today<br>baseline_store_json=$baseline_store_json"
+} else {
 
+    set baseline_store_tuple [im_sencha_sql_to_store -sql "select 1 where 1=0"]
+    set baseline_store_json [lindex $baseline_store_tuple 0]
+    set baseline_store_columns [lindex $baseline_store_tuple 1]
+}
 
 # -----------------------------------------------------------------
 # Format the data JSON and HTML
