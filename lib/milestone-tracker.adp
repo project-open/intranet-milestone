@@ -26,8 +26,8 @@ Ext.define('Ext.chart.series.MilestoneLine', {
 
         // Loop throught the store and convert empty strings into "undefined" values.
         // Undefined values are skipped by the underlying series.Line diagram.
-	// This is important so that the diagram doesn't show the audit points after
-	// a phase has been finished.
+        // This is important so that the diagram doesn't show the audit points after
+        // a phase has been finished.
         store.each(function(record) {
             for (var key in record.data) {
                 var value = record.data[key];
@@ -65,7 +65,7 @@ Ext.onReady(function () {
         },
         axes: [{
             type: 'Time',
-	    title: '@milestone_end_date_l10n@',
+            title: '@milestone_end_date_l10n@',
             position: 'left',
             fields: [@fields_joined;noquote@],
             dateFormat: 'Y-m-d',
@@ -75,7 +75,7 @@ Ext.onReady(function () {
             toDate: @yrange_end_date_js;noquote@,
         }, {
             type: 'Time',
-	    title: '@date_of_planning_l10n@',
+            title: '@date_of_planning_l10n@',
             position: 'bottom',
             fields: 'date',
             dateFormat: 'Y-m-d',
@@ -141,10 +141,14 @@ Ext.onReady(function () {
             var xStart = xAxis.x;
             var xEnd = xAxis.x + xAxis.length;
 
+	    var fromDate = xAxis.from;
+	    var toDate = xAxis.to;
+/*
             var fromDate = xAxis.fromDate.getTime();
             var toDate = xAxis.toDate.getTime();
-	    var diffDate = Math.abs(1.0*toDate - 1.0*fromDate);
-	    if (diffDate < 1.0) return null;
+*/
+            var diffDate = Math.abs(1.0*toDate - 1.0*fromDate);
+            if (diffDate < 1.0) return null;
             var dDate = d.getTime();
             var perc = (dDate - fromDate) / (toDate - fromDate);
             return xStart + (xEnd - xStart) * perc;
@@ -171,11 +175,11 @@ Ext.onReady(function () {
 
             baselineStore.each(function(model) {
                 var creation_date = model.get('creation_date');
-		if (!creation_date) return;
+                if (!creation_date) return;
                 var dateX = me.date2x(new Date(creation_date));
-		if (null === dateX) return;
+                if (null === dateX) return;
 
-		console.log(model);
+                console.log(model);
                 var baselineLine = me.surface.add({
                     type:'rect', 
                     x: dateX, 
@@ -196,8 +200,8 @@ Ext.onReady(function () {
                     font: "10px Arial"
                 }).show(true);
 
-		labelY = labelY + 30;
-		if (labelY > yAxis.y) { labelY = yAxis.y - yAxis.length; }
+                labelY = labelY + 30;
+                if (labelY > yAxis.y) { labelY = yAxis.y - yAxis.length; }
 
             });
         }
@@ -231,50 +235,50 @@ Ext.onReady(function () {
         layout: 'fit',
         header: false,
         tbar: [
-	    '->',
-	    {
-		id: 'milestone_zoom_in',
-		xtype: 'button',
-		icon: '/intranet/images/navbar_default/zoom_in.png',
-		toggleGroup: 'milestone_zoom',
-		enableToggle: true,
-		pressed: true,
-		listeners: {
-		    toggle: function(button, pressed, eOpts) {
-			if (!pressed) return;
-			console.log('milestone-tracker.zoom_in:');
-			var idx = milestoneStore.find('id', 'start'); milestoneStore.removeAt(idx);
-			var idx = milestoneStore.find('id', 'end'); milestoneStore.removeAt(idx);
-		    },
-		    render: function(button) {	// button.tooltip doesn't work, so work around here...
-			Ext.create('Ext.tip.ToolTip', {target: button.getEl(), html: 'Show actual data points'});
-		    }
-		}
-	    },
-	    {
-		id: 'milestone_zoom_out',
-		xtype: 'button',
-		icon: '/intranet/images/navbar_default/zoom_out.png',
-		enableToggle: true,
-		pressed: false,
-		toggleGroup: 'milestone_zoom',
-		listeners: {
-		    toggle: function(button, pressed, eOpts) {
-			if (!pressed) return;
-			console.log('milestone-tracker.zoom_out:');
-			var idx = milestoneStore.find('id', 'start'); milestoneStore.removeAt(idx);
-			var idx = milestoneStore.find('id', 'end'); milestoneStore.removeAt(idx);
-			milestoneStore.add(
-			    {id: 'start', date: new Date('@project_start_date@'), horizon: new Date('@project_start_date@')},
-			    {id: 'end', date: new Date('@project_end_date@'), horizon: new Date('@project_end_date@')}
-			);			
-		    },
-		    render: function(button) {	// button.tooltip doesn't work, so work around here...
-			Ext.create('Ext.tip.ToolTip', {target: button.getEl(), html: '<nobr>Show entire project</nobr>'});
-		    }
-		}
-	    },
-	    '->',
+            '->',
+            {
+                id: 'milestone_zoom_in',
+                xtype: 'button',
+                icon: '/intranet/images/navbar_default/zoom_in.png',
+                toggleGroup: 'milestone_zoom',
+                enableToggle: true,
+                pressed: true,
+                listeners: {
+                    toggle: function(button, pressed, eOpts) {
+                        if (!pressed) return;
+                        console.log('milestone-tracker.zoom_in:');
+                        var idx = milestoneStore.find('id', 'start'); milestoneStore.removeAt(idx);
+                        var idx = milestoneStore.find('id', 'end'); milestoneStore.removeAt(idx);
+                    },
+                    render: function(button) {	// button.tooltip doesn't work, so work around here...
+                        Ext.create('Ext.tip.ToolTip', {target: button.getEl(), html: 'Show actual data points'});
+                    }
+                }
+            },
+            {
+                id: 'milestone_zoom_out',
+                xtype: 'button',
+                icon: '/intranet/images/navbar_default/zoom_out.png',
+                enableToggle: true,
+                pressed: false,
+                toggleGroup: 'milestone_zoom',
+                listeners: {
+                    toggle: function(button, pressed, eOpts) {
+                        if (!pressed) return;
+                        console.log('milestone-tracker.zoom_out:');
+                        var idx = milestoneStore.find('id', 'start'); milestoneStore.removeAt(idx);
+                        var idx = milestoneStore.find('id', 'end'); milestoneStore.removeAt(idx);
+                        milestoneStore.add(
+                            {id: 'start', date: new Date('@project_start_date@'), horizon: new Date('@project_start_date@')},
+                            {id: 'end', date: new Date('@project_end_date@'), horizon: new Date('@project_end_date@')}
+                        );			
+                    },
+                    render: function(button) {	// button.tooltip doesn't work, so work around here...
+                        Ext.create('Ext.tip.ToolTip', {target: button.getEl(), html: '<nobr>Show entire project</nobr>'});
+                    }
+                }
+            },
+            '->',
             { text: 'Help', icon: gifPath+'help.png', menu: helpMenu}
         ],
 
