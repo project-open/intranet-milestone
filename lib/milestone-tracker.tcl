@@ -395,7 +395,9 @@ foreach audit_date $audit_dates {
 	set key "$mid-$audit_date"
 	set series_v ""
 	if {[info exists cell_hash($key)]} { set series_v $cell_hash($key) }
+	if {"" eq $series_v} { continue }
 	regexp {^(....)\-(..)\-(..)$} $series_v match series_year series_month series_day
+	# ns_log Notice "milestone-tracker.tcl: mid=$mid, series_v=$series_v, match=$match"
 	set series_v_js "new Date('$series_year-$series_month-$series_day')"
 
 	# Skip values of milestones after they have been closed
