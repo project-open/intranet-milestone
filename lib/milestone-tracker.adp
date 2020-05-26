@@ -141,8 +141,8 @@ Ext.onReady(function () {
             var xStart = xAxis.x;
             var xEnd = xAxis.x + xAxis.length;
 
-	    var fromDate = xAxis.from;
-	    var toDate = xAxis.to;
+            var fromDate = xAxis.from;
+            var toDate = xAxis.to;
 /*
             var fromDate = xAxis.fromDate.getTime();
             var toDate = xAxis.toDate.getTime();
@@ -189,22 +189,53 @@ Ext.onReady(function () {
                     stroke:'#FF0000', 
                     zIndex: 200
                 }).show(true);
+                baselineLine.baseline_p = 1;
 
                 var axisText = me.surface.add({
                     type: 'text',
                     text: model.get('baseline_name') +"\n"+model.get('creation_date'),
                     x: dateX + 5,
                     y: labelY,
-//		    stroke:'#FF0000',
                     fill: '#FF0000',
                     font: "10px Arial"
                 }).show(true);
+                axisText.baseline_p = 1;
 
                 labelY = labelY + 30;
                 if (labelY > yAxis.y) { labelY = yAxis.y - yAxis.length; }
 
             });
+        },
+
+        /**
+         * Remove red vertical bars
+         */
+        clearBaselines: function() {
+            var me = this;
+            var surface = me.surface;
+            var items = me.surface.items.items;
+
+	    // We have to loop, because the array changes when removing
+	    var repeat = true;
+	    while (repeat) {
+		repeat = false;
+
+		for (var i = 0, ln = items.length; i < ln; i++) {
+                    var sprite = items[i];
+                    if (!sprite) continue;
+                    var baseline_p = sprite.baseline_p;
+		    var fill = sprite.fill;
+                    // console.log('Fill='+fill+', baseline_p='+baseline_p);
+		    
+                    if ("#FFF" === fill || "#FF0000" === fill || baseline_p) {
+			sprite.remove();
+			repeat = true;
+			break;
+                    }
+		}
+	    }
         }
+
     });
 
 
@@ -247,6 +278,9 @@ Ext.onReady(function () {
                     toggle: function(button, pressed, eOpts) {
                         if (!pressed) return;
                         console.log('milestone-tracker.zoom_in:');
+
+    chart.clearBaselines();
+
                         var idx = milestoneStore.find('id', 'start'); milestoneStore.removeAt(idx);
                         var idx = milestoneStore.find('id', 'end'); milestoneStore.removeAt(idx);
                     },
@@ -266,6 +300,12 @@ Ext.onReady(function () {
                     toggle: function(button, pressed, eOpts) {
                         if (!pressed) return;
                         console.log('milestone-tracker.zoom_out:');
+
+    chart.clearBaselines();
+
+
+
+
                         var idx = milestoneStore.find('id', 'start'); milestoneStore.removeAt(idx);
                         var idx = milestoneStore.find('id', 'end'); milestoneStore.removeAt(idx);
                         milestoneStore.add(
