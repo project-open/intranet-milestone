@@ -1,4 +1,11 @@
 <if "1" eq @show_diagram_p@>
+<!--
+<ul>
+<li>tracker_days: @tracker_days@
+<li>tracker_step_uom: @tracker_step_uom@
+<li>tracker_step_units: @tracker_step_units@
+</li>
+-->
 <div id=@diagram_id@></div>
 <script type='text/javascript'>
 
@@ -68,23 +75,52 @@ Ext.onReady(function () {
             title: '@milestone_end_date_l10n@',
             position: 'left',
             fields: [@fields_joined;noquote@],
-            dateFormat: 'Y-m-d',
+            dateFormat: '@yrange_date_format@',
             constrain: false,
             step: [@yrange_step_uom@, @yrange_step_units@],
             fromDate: @yrange_start_date_js;noquote@,
             toDate: @yrange_end_date_js;noquote@,
+            label: {
+                // Work around bug in Sencha TimeAxis with Month scale showing 31st of last month
+                renderer: function(value, label, storeItem, item, i, display, animate, index) { 
+                    var valueDate = new Date(value);
+                    var valueDay = valueDate.getDate();
+                    while (valueDay > 25 && "Ext.Date.MONTH" === '@tracker_step_uom@') {
+                        valueDate = new Date(valueDate.getTime() + 24.0*3600.0*1000.0); // add one day
+                        valueDay = valueDate.getDate();
+                    }
+                    return valueDate.getTime(); 
+                }
+            }
         }, {
             type: 'Time',
             title: '@date_of_planning_l10n@',
             position: 'bottom',
             fields: 'date',
-            dateFormat: 'Y-m-d',
+            dateFormat: '@tracker_date_format@',
             constrain: false,
-//            step: [@tracker_step_uom@, @tracker_step_units@],
-            label: {rotate: {degrees: 315}}
+            step: [@tracker_step_uom@, @tracker_step_units@],
+            label: {
+                rotate: {degrees: 315},
+                // Work around bug in Sencha TimeAxis with Month scale showing 31st of last month
+                renderer: function(value, label, storeItem, item, i, display, animate, index) { 
+                    var valueDate = new Date(value);
+                    var valueDay = valueDate.getDate();
+                    while (valueDay > 25 && "Ext.Date.MONTH" === '@tracker_step_uom@') {
+                        valueDate = new Date(valueDate.getTime() + 24.0*3600.0*1000.0); // add one day
+                        valueDay = valueDate.getDate();
+                    }
+                    return valueDate.getTime(); 
+                }
+            }
         }],
         series: [@series_json;noquote@],
         listeners: {
+	    refresh: function(myChart, eOpts) {
+		// Redraw the baselines after refreshing the display
+                myChart.clearBaselines();
+                myChart.drawBaselines();
+	    },
             boxready: function(myChart, chartWidth, chartHeight, eOpts) {
                 // Determine new position of legend in lower right corner
                 var myLegend = myChart.legend;
@@ -125,8 +161,8 @@ Ext.onReady(function () {
                 }
             }
         },
-        /**                                                                                                                                                     
-         * Convert a date into an X position, relative to the left of the surface.
+
+        /**                                                                                                                                              * Convert a date into an X position, relative to the left of the surface.
          */
         date2x: function(d) {
             var me = this;
@@ -134,26 +170,20 @@ Ext.onReady(function () {
             
             var surfaceHeight = me.surface.height;
             var surfaceWidth = me.surface.width;
-            
             var xAxis = me.axes.map["bottom"];
             var yAxis = me.axes.map["left"];
 
             var xStart = xAxis.x;
             var xEnd = xAxis.x + xAxis.length;
+            var fromTime = xAxis.from;
+            var toTime = xAxis.to;
 
-            var fromDate = xAxis.from;
-            var toDate = xAxis.to;
-/*
-            var fromDate = xAxis.fromDate.getTime();
-            var toDate = xAxis.toDate.getTime();
-*/
-            var diffDate = Math.abs(1.0*toDate - 1.0*fromDate);
+            var diffDate = Math.abs(1.0 * toTime - 1.0 * fromTime);
             if (diffDate < 1.0) return null;
             var dDate = d.getTime();
-            var perc = (dDate - fromDate) / (toDate - fromDate);
-            return xStart + (xEnd - xStart) * perc;
-
+            var perc = (dDate - fromTime) / (toTime - fromTime);
             if (me.debugAxis) console.log('PO.milestone.MilestoneChart.date2x: Finished');
+            return xStart + (xEnd - xStart) * perc;
         },
 
         /**
@@ -215,25 +245,22 @@ Ext.onReady(function () {
             var surface = me.surface;
             var items = me.surface.items.items;
 
-	    // We have to loop, because the array changes when removing
-	    var repeat = true;
-	    while (repeat) {
-		repeat = false;
+            // We have to loop, because the array changes when removing
+            var repeat = true;
+            while (repeat) {
+                repeat = false;
 
-		for (var i = 0, ln = items.length; i < ln; i++) {
+                for (var i = 0, ln = items.length; i < ln; i++) {
                     var sprite = items[i];
                     if (!sprite) continue;
                     var baseline_p = sprite.baseline_p;
-		    var fill = sprite.fill;
-                    // console.log('Fill='+fill+', baseline_p='+baseline_p);
-		    
-                    if ("#FFF" === fill || "#FF0000" === fill || baseline_p) {
-			sprite.remove();
-			repeat = true;
-			break;
+                    if (baseline_p) {
+                        sprite.remove();
+                        repeat = true;
+                        break;
                     }
-		}
-	    }
+                }
+            }
         }
 
     });
@@ -276,11 +303,9 @@ Ext.onReady(function () {
                 pressed: true,
                 listeners: {
                     toggle: function(button, pressed, eOpts) {
+			// Remove the extreme start and end dates from the store to zoom in
                         if (!pressed) return;
                         console.log('milestone-tracker.zoom_in:');
-
-    chart.clearBaselines();
-
                         var idx = milestoneStore.find('id', 'start'); milestoneStore.removeAt(idx);
                         var idx = milestoneStore.find('id', 'end'); milestoneStore.removeAt(idx);
                     },
@@ -298,20 +323,15 @@ Ext.onReady(function () {
                 toggleGroup: 'milestone_zoom',
                 listeners: {
                     toggle: function(button, pressed, eOpts) {
+			// Include the min and max dates as part of the store
                         if (!pressed) return;
                         console.log('milestone-tracker.zoom_out:');
-
-    chart.clearBaselines();
-
-
-
-
                         var idx = milestoneStore.find('id', 'start'); milestoneStore.removeAt(idx);
                         var idx = milestoneStore.find('id', 'end'); milestoneStore.removeAt(idx);
                         milestoneStore.add(
-                            {id: 'start', date: new Date('@project_start_date@'), horizon: new Date('@project_start_date@')},
+                            {id: 'start', date: @yrange_start_date_js;noquote@, horizon: @yrange_start_date_js;noquote@},
                             {id: 'end', date: new Date('@project_end_date@'), horizon: new Date('@project_end_date@')}
-                        );			
+                        );
                     },
                     render: function(button) {	// button.tooltip doesn't work, so work around here...
                         Ext.create('Ext.tip.ToolTip', {target: button.getEl(), html: '<nobr>Show entire project</nobr>'});

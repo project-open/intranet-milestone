@@ -266,30 +266,26 @@ set tracker_step_months [expr 1 + int($tracker_duration_months / 10.0)]
 
 # Determine step-width for the Y range:
 set tracker_days [expr $tracker_end_julian - $tracker_start_julian]
-set tracker_step_uom "Ext.Date.MONTH"
-set tracker_step_units 1
-if {$tracker_days > 3650} {
+if {1} {
     # more than 10 years
     set tracker_step_uom "Ext.Date.YEAR"
     set tracker_step_units 1
+    set tracker_date_format "Y-m"
 }
-if {$tracker_days < 365} {
+if {$tracker_days < 3650} {
+    # between 5 months and 10 years
     set tracker_step_uom "Ext.Date.MONTH"
-    set tracker_step_units 1
+    set tracker_step_units [expr int($tracker_days / 250)]
+    if {$tracker_step_units < 1} { set tracker_step_units 1 }
+    set tracker_date_format "Y-m"
 }
 if {$tracker_days < 132} {
+    # less than 4 months
     set tracker_step_uom "Ext.Date.DAY"
-    set tracker_step_units 5
+    set tracker_step_units [expr int($tracker_days / 15)]
+    if {$tracker_step_units < 1} { set tracker_step_units 1 }
+    set tracker_date_format "Y-m-d"
 }
-if {$tracker_days < 66} {
-    set tracker_step_uom "Ext.Date.DAY"
-    set tracker_step_units 2
-}
-if {$tracker_days < 33} {
-    set tracker_step_uom "Ext.Date.DAY"
-    set tracker_step_units 1
-}
-
 
 
 # Y-Range
@@ -301,20 +297,24 @@ set yrange_step_months [expr 1 + int($yrange_duration_months / 10.0)]
 
 # Determine step-width for the Y range:
 set yrange_days [expr $yrange_end_julian - $yrange_start_julian]
-set yrange_step_uom "Ext.Date.MONTH"
-set yrange_step_units 1
-if {$yrange_days > 3650} {
+if {1} {
     # more than 10 years
     set yrange_step_uom "Ext.Date.YEAR"
     set yrange_step_units 1
+    set yrange_date_format "Y-m"
 }
-if {$yrange_days < 365} {
+if {$yrange_days < 3650} {
+    # between 5 months and 10 years
     set yrange_step_uom "Ext.Date.MONTH"
-    set yrange_step_units 1
+    set yrange_step_units [expr int($yrange_days / 250)]
+    if {$yrange_step_units < 1} { set yrange_step_units 1 }
+    set yrange_date_format "Y-m"
 }
 if {$yrange_days < 33} {
     set yrange_step_uom "Ext.Date.DAY"
-    set yrange_step_units 1
+    set yrange_step_units [expr int($yrange_days / 15)]
+    if {$yrange_step_units < 1} { set yrange_step_units 1 }
+    set yrange_date_format "Y-m-d"
 }
 
 
