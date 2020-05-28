@@ -80,6 +80,7 @@ if {1 || [llength $milestone_list] < 3} {
     "]
 }
 
+
 if {"" eq $milestone_list} { set milestone_list {0} }
 if {[llength $milestone_list] < 1} { set show_diagram_p 0 }
 foreach mid $milestone_list {
@@ -146,6 +147,10 @@ if {"" eq $audit_dates} {
     return
 }
 
+# ad_return_complaint 1 "milestone_list=$milestone_list, show_diagram_p=$show_diagram_p"
+
+
+
 
 # -----------------------------------------------
 # Determine Start- and End date for the Tracker
@@ -168,7 +173,7 @@ if {$today < $tracker_start_date} { set show_today_p 0 }
 if {$today > $tracker_end_date} { set show_today_p 0 }
 
 
-if {[llength $audit_dates] < 2} { set show_diagram_p 0 }
+if {[llength $audit_dates] < 1} { set show_diagram_p 0 }
 
 
 
@@ -341,16 +346,18 @@ if {[im_table_exists im_baselines]} {
 
     set baseline_sql "
 	select	t.*
-	from	(select	 b.baseline_id,
-		 b.baseline_name,
-		 im_category_from_id(b.baseline_status_id) as baseline_status,
-		 im_category_from_id(b.baseline_type_id) as baseline_type,
-		 o.creation_date::date as creation_date
-		 from	 im_baselines b,
-		 acs_objects o
-		 where	 b.baseline_project_id = $main_project_id and
-		 b.baseline_id = o.object_id
-		 $baseline_sql_today
+	from	(select	b.baseline_id,
+			b.baseline_name,
+			im_category_from_id(b.baseline_status_id) as baseline_status,
+			im_category_from_id(b.baseline_type_id) as baseline_type,
+			o.creation_date::date as creation_date
+		from
+			im_baselines b,
+			acs_objects o
+		where
+			b.baseline_project_id = $main_project_id and
+			b.baseline_id = o.object_id
+			$baseline_sql_today
 		 ) t
 	order by baseline_id DESC
     "
@@ -358,7 +365,7 @@ if {[im_table_exists im_baselines]} {
     set baseline_store_json [lindex $baseline_store_tuple 0]
     set baseline_store_columns [lindex $baseline_store_tuple 1]
 
-    #ad_return_complaint 1 "baseline_sql_today=$baseline_sql_today<br>baseline_store_json=$baseline_store_json"
+#    ad_return_complaint 1 "baseline_sql_today=$baseline_sql_today<br>baseline_store_json=$baseline_store_json<br><pre>$baseline_sql</pre><br>show_today_p=$show_today_p"
 } else {
 
     set baseline_store_tuple [im_sencha_sql_to_store -sql "select 1 where 1=0"]
