@@ -3,6 +3,7 @@
 
   <msg key="Add_a_new_Milestone">Nieuwe mijlpaal</msg>
   <msg key="Current_Milestones">Huidige mijlpaal</msg>
+  <msg key="Customer">Klant</msg>
   <msg key="Deadline">Uiterste termijn</msg>
   <msg key="Filter_Milestones">Filter mijlpalen</msg>
   <msg key="Future_Milestones">Toekomstige mijlpalen</msg>
@@ -12,6 +13,8 @@
   <msg key="Milestone_Status">Status</msg>
   <msg key="Milestone_Type">Type</msg>
   <msg key="Milestones">Mijlpalen</msg>
+  <msg key="Milestones_List">Lijst mijlpalen</msg>
   <msg key="On_track_status">OK?</msg>
+  <msg key="Project_Manager">Project manager</msg>
   <msg key="Time_Interval">Tijdinterval</msg>
 </message_catalog>
