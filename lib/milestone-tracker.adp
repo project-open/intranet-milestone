@@ -65,6 +65,7 @@ Ext.onReady(function () {
     var baselineStore = @baseline_store_json;noquote@;
 
     var chart = new Ext.chart.Chart({
+        debug: true,
         animate: false,
         store: milestoneStore,
         legend: { 
@@ -116,11 +117,17 @@ Ext.onReady(function () {
         }],
         series: [@series_json;noquote@],
         listeners: {
-	    refresh: function(myChart, eOpts) {
-		// Redraw the baselines after refreshing the display
+            refresh: function(myChart, eOpts) {
+                // Redraw the baselines after refreshing the display
+
+                // Update the stepping for the xAxis
+                var xAxis = myChart.axes.get('bottom');
+                myChart.calcStep(xAxis);
+
                 myChart.clearBaselines();
                 myChart.drawBaselines();
-	    },
+            },
+
             boxready: function(myChart, chartWidth, chartHeight, eOpts) {
                 // Determine new position of legend in lower right corner
                 var myLegend = myChart.legend;
@@ -166,7 +173,7 @@ Ext.onReady(function () {
          */
         date2x: function(d) {
             var me = this;
-            if (me.debugAxis) console.log('PO.milestone.MilestoneChart.date2x('+d+'): Starting');
+            if (me.debug) console.log('PO.milestone.MilestoneTracker.date2x('+d+'): Starting');
             
             var surfaceHeight = me.surface.height;
             var surfaceWidth = me.surface.width;
@@ -182,9 +189,50 @@ Ext.onReady(function () {
             if (diffDate < 1.0) return null;
             var dDate = d.getTime();
             var perc = (dDate - fromTime) / (toTime - fromTime);
-            if (me.debugAxis) console.log('PO.milestone.MilestoneChart.date2x: Finished');
+            if (me.debug) console.log('PO.milestone.MilestoneTracker.date2x: Finished');
             return xStart + (xEnd - xStart) * perc;
         },
+
+        /**
+         * Convert a date into an X position, relative to the left of the surface.
+         */
+        calcStep: function(axis, diffDays) {
+            var me = this;
+            if (me.debug) console.log('PO.milestone.MilestoneTracker.calcStep: Starting');
+        
+            if (!axis) axis = me.axes.map["bottom"];
+            var fromTime = axis.from;
+            var toTime = axis.to;
+                if (!diffDays) diffDays = (1.0 * toTime - 1.0 * fromTime) / (24.0 * 3600.0 * 1000.0);
+            if (me.debug) console.log('PO.milestone.MilestoneTracker.calcStep: diffDays='+diffDays);
+
+            // Default for > 10 years
+            var stepUom = Ext.Date.YEAR;
+            var stepUnits = 1;
+            var dateFormat = "Y-m";
+
+            if (diffDays < 3650) {
+                // between 6 months and 10 years
+                stepUom = Ext.Date.MONTH;
+                stepUnits = Math.round(diffDays / 250.0);
+                if (stepUnits < 1) stepUnits = 1;
+                dateFormat = "Y-m";
+            }
+
+            if (diffDays < 180) {
+                // less than 6 months
+                stepUom = Ext.Date.DAY;
+                stepUnits = Math.round(diffDays / 15.0);
+                if (stepUnits < 1) stepUnits = 1;
+                dateFormat = "Y-m-d";
+            }
+
+            axis.step = [stepUom, stepUnits];
+            axis.dateFormat = dateFormat;
+
+            if (me.debug) console.log('PO.milestone.MilestoneTracker.calcStep: Finished: step='+axis.step+', fmt='+axis.dateFormat);
+        },
+
 
         /**
          * Draw a red vertical bar to indicate where we are today
@@ -303,11 +351,13 @@ Ext.onReady(function () {
                 pressed: true,
                 listeners: {
                     toggle: function(button, pressed, eOpts) {
-			// Remove the extreme start and end dates from the store to zoom in
+                        // Remove the extreme start and end dates from the store to zoom in
                         if (!pressed) return;
                         console.log('milestone-tracker.zoom_in:');
                         var idx = milestoneStore.find('id', 'start'); milestoneStore.removeAt(idx);
                         var idx = milestoneStore.find('id', 'end'); milestoneStore.removeAt(idx);
+                        chart.calcStep();
+
                     },
                     render: function(button) {	// button.tooltip doesn't work, so work around here...
                         Ext.create('Ext.tip.ToolTip', {target: button.getEl(), html: 'Show actual data points'});
@@ -323,17 +373,26 @@ Ext.onReady(function () {
                 toggleGroup: 'milestone_zoom',
                 listeners: {
                     toggle: function(button, pressed, eOpts) {
-			// Include the min and max dates as part of the store
+                        // Include the min and max dates as part of the store
                         if (!pressed) return;
                         console.log('milestone-tracker.zoom_out:');
+                        
+                        var xAxis = chart.axes.map["bottom"];
+                        var yAxis = chart.axes.map["left"];
+
                         var idx = milestoneStore.find('id', 'start'); milestoneStore.removeAt(idx);
                         var idx = milestoneStore.find('id', 'end'); milestoneStore.removeAt(idx);
                         milestoneStore.add(
                             {id: 'start', date: @yrange_start_date_js;noquote@, horizon: @yrange_start_date_js;noquote@},
                             {id: 'end', date: new Date('@project_end_date@'), horizon: new Date('@project_end_date@')}
                         );
+			
+			// Calculate the new stepping for the X axis before the redraw
+                        var diffDays = (new Date('@yrange_end_date@').getTime() - new Date('@yrange_start_date@').getTime()) / (24.0 * 3600.0 * 1000.0);
+                        chart.calcStep(xAxis, diffDays);
+			// After this line there will a redraw happen
                     },
-                    render: function(button) {	// button.tooltip doesn't work, so work around here...
+                    render: function(button) {        // button.tooltip doesn't work, so work around here...
                         Ext.create('Ext.tip.ToolTip', {target: button.getEl(), html: '<nobr>Show entire project</nobr>'});
                     }
                 }
@@ -345,6 +404,7 @@ Ext.onReady(function () {
         items: chart
     });
 
+    chart.calcStep();
     chart.drawBaselines();
 
 });
