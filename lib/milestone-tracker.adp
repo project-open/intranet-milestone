@@ -100,6 +100,7 @@ Ext.onReady(function () {
             fields: 'date',
             dateFormat: '@tracker_date_format@',
             constrain: false,
+
             step: [@tracker_step_uom@, @tracker_step_units@],
             label: {
                 rotate: {degrees: 315},
@@ -114,6 +115,7 @@ Ext.onReady(function () {
                     return valueDate.getTime(); 
                 }
             }
+
         }],
         series: [@series_json;noquote@],
         listeners: {
