@@ -66,7 +66,7 @@ set milestone_list [db_list milestone_list "
 		(child.milestone_p = 't' OR child.project_type_id in ([join $milestone_ptypes ","]))
 "]
 
-if {1 || [llength $milestone_list] < 3} {
+if {[llength $milestone_list] < 1} {
     # We didn't find at least 3 "real" milestones in the project.
     # Try using the project "phases" (1st level task right below
     # the main projects.
