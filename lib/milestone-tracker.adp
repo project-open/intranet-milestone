@@ -7,7 +7,7 @@
 </li>
 -->
 <div id=@diagram_id@></div>
-<script type='text/javascript'>
+<script type='text/javascript' <if @::__csp_nonce@ not nil>nonce="@::__csp_nonce;literal@"</if>>
 
 Ext.Loader.setPath('PO', '/sencha-core');
 

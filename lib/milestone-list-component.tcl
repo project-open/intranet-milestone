@@ -51,10 +51,7 @@ template::list::create \
     -row_pretty_plural "[lang::message::lookup "" intranet-milestone.Milestones {Milestones}]" \
     -elements {
 	milestone_chk {
-	    label "<input type=\"checkbox\" 
-                          name=\"_dummy\" 
-                          onclick=\"acs_ListCheckAll('milestones_list', this.checked)\" 
-                          title=\"Check/uncheck all rows\">"
+	    label "<input id=list_check_all type=\"checkbox\" name=\"_dummy\" title=\"Check/uncheck all rows\">"
 	    display_template {
 		@milestone_lines.milestone_chk;noquote@
 	    }
