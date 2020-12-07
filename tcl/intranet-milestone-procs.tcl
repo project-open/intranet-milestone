@@ -110,6 +110,58 @@ ad_proc -public im_milestone_tracker {
 
 
 
+ad_proc -public im_milestone_program_tracker {
+    -project_id:required
+    {-diagram_width 600 }
+    {-diagram_height 400 }
+    {-diagram_name_maxlen 30 }
+    {-diagram_caption "" }
+    {-diagram_title "Milestones" }
+} {
+    Returns a HTML code with a Sencha line diagram representing
+    the evolution of the project's milestones (sub-projects marked
+    as milestones or with a type that is a sub-type of milestone).
+    @param project_id The project to show
+} {
+    # Check if audit has been installed
+    if {![im_table_exists im_audits]} { return "" }
+    # Check if programs are installed
+    if {![im_column_exists im_projects program_id]} { return "" }
+
+    # Check if the project is a main project and abort otherwise
+    # We only want to show this diagram in a main project.
+    set found_p 0
+    db_0or1row project_info "
+	select	p.parent_id, p.project_type_id, 1 as found_p,
+		(select count(*) from im_projects sub_p where sub_p.parent_id = p.project_id) as sub_child_count,
+		(select count(*) from im_projects sub_p where sub_p.program_id = p.project_id) as program_child_count
+	from	im_projects p
+	where project_id = :project_id
+    "
+    if {"1" ne $found_p} { return "" }; # Didn't find the project, discard!
+    if {"" ne $parent_id} { return "" }; # This is a sub-project, discard!
+    if {0 == $program_child_count} { return "" }; # The program doesn't have projects yet, discard!
+#    if {0 == $child_count} { return "" }; # Discard any projects without children
+
+    # Sencha check and permissions
+    if {![im_sencha_extjs_installed_p]} { return "" }
+    im_sencha_extjs_load_libraries
+
+    # Call the lib portlet
+    set params [list \
+		    [list project_id $project_id] \
+		    [list diagram_width $diagram_width] \
+		    [list diagram_height $diagram_height] \
+		    [list name_maxlen $diagram_name_maxlen] \
+		    [list diagram_title $diagram_title] \
+		    [list diagram_caption $diagram_caption] \
+    ]
+    set result [ad_parse_template -params $params "/packages/intranet-milestone/lib/program-milestone-tracker"]
+    return [string trim $result]
+}
+
+
+
 # ----------------------------------------------------------------------
 # Generate generic select SQL for milestones
 # to be used in list pages, options, ...

@@ -41,19 +41,14 @@ where category = 'Milestone' and category_type = 'Intranet Project Type';
 --
 
 SELECT im_component_plugin__new (
-	null,					-- plugin_id
-	'im_component_plugin',			-- object_type
-	now(),					-- creation_date
-	null,					-- creation_user
-	null,					-- creation_ip
-	null,					-- context_id
+	null, 'im_component_plugin', now(), null, null, null,
 	'Milestone Tracker',			-- plugin_name
 	'intranet-milestone',			-- package_name
 	'left',					-- location
 	'/intranet/projects/view',		-- page_url
 	null,					-- view_name
 	100,					-- sort_order
-	'im_milestone_tracker -project_id $project_id -diagram_caption "Milestones" -diagram_width 300 -diagram_height 300'
+	'im_milestone_tracker -project_id $project_id -diagram_caption "Milestones" -diagram_width 600 -diagram_height 400'
 );
 
 SELECT acs_permission__grant_permission(
@@ -63,15 +58,28 @@ SELECT acs_permission__grant_permission(
 );
 
 
+SELECT im_component_plugin__new (
+	null, 'im_component_plugin', now(), null, null, null,
+	'Program Milestone Tracker',		-- plugin_name
+	'intranet-milestone',			-- package_name
+	'left',					-- location
+	'/intranet/projects/view',		-- page_url
+	null,					-- view_name
+	100,					-- sort_order
+	'im_milestone_program_tracker -project_id $project_id -diagram_caption "Milestones" -diagram_width 600 -diagram_height 400'
+);
+
+SELECT acs_permission__grant_permission(
+	(select min(plugin_id) from im_component_plugins where plugin_name = 'Program Milestone Tracker'),
+	(select group_id from groups where group_name = 'Employees'),
+	'read'
+);
+
+
 
 
 SELECT im_component_plugin__new (
-	null,					-- plugin_id
-	'im_component_plugin',			-- object_type
-	now(),					-- creation_date
-	null,					-- creation_user
-	null,					-- creation_ip
-	null,					-- context_id
+	null, 'im_component_plugin', now(), null, null, null,
 	'Milestone Component',			-- plugin_name
 	'intranet-milestone',			-- package_name
 	'left',					-- location
