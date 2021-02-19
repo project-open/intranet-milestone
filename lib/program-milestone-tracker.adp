@@ -324,10 +324,10 @@ Ext.onReady(function () {
         debug: false,
         style: {overflow: 'visible'},						// For the Combo popup
         store: Ext.create('Ext.data.Store', { fields: ['text', 'url'], data: [
-            {text: 'Milestone Tracker Help', url: 'http://www.project-open.com/en/package-intranet-milestone'}
+            {text: 'Milestone Tracker Help', url: 'https://www.project-open.com/en/package-intranet-milestone'}
 //            {text: '-'},
 //            {text: 'Only Text'},
-//            {text: 'Google', url: 'http://www.google.com'}
+//            {text: 'Google', url: 'https://www.google.com'}
         ]})
     });
 

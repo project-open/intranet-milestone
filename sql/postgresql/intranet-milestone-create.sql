@@ -3,7 +3,7 @@
 -- Copyright (c) 2008 ]project-open[
 --
 -- All rights reserved. Please check
--- http://www.project-open.com/license/ for details.
+-- https://www.project-open.com/license/ for details.
 --
 -- @Author frank.bergmann@project-open.com
 
